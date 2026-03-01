@@ -226,7 +226,7 @@ function can_go_eat(){
       }
     }
     
-    for (let length = black_or_white; length != current_selected.pawn_go_pace; length += black_or_white){
+    for (let length = black_or_white; length != current_selected.pawn_go_pace + black_or_white; length += black_or_white){
       aiming_x = current_selected.x;
       aiming_y = current_selected.y - length;
       if (looping_through_all_piece_and_check(aiming_x,aiming_y)){
@@ -350,7 +350,12 @@ function selecting_piece(){
 function looping_through_all_piece_and_check(x,y){
   for (let item of white_all_pieces){
     if (item.x === x && item.y === y){
-      return true
+      return true;
+    }
+  }
+  for (let item of black_all_pieces){
+    if (item.x === x && item.y === y){
+      return true;
     }
   }
   return false
@@ -373,6 +378,7 @@ function check_chess_path_see_if_can_go(){
         print("here");
       }
     }
+    
   }
   
 }
