@@ -37,10 +37,10 @@ let black_all_pieces = [];
 
 let board_height;
 
-let knight_direction = [[-1,2],[1,2],[2,1],[2,-1],[1,-2],[-1,-2],[-2,-1],[-2,1]]
-let queen_direction = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]]
-let bishop_direction = [[1,1], [-1,1], [-1,-1],[1,-1]]
-let rook_direction = [[0,1],[1,0],[0,-1],[-1,0]]
+let knight_direction = [[-1,2],[1,2],[2,1],[2,-1],[1,-2],[-1,-2],[-2,-1],[-2,1]];
+let queen_direction = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]];
+let bishop_direction = [[1,1], [-1,1], [-1,-1],[1,-1]];
+let rook_direction = [[0,1],[1,0],[0,-1],[-1,0]];
 let king_direction = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]];
 let castle_direction = [[1,0],[-1,0]];
 
@@ -81,19 +81,18 @@ function setup() {
 
 function draw() {
   createCanvas(windowWidth, windowHeight);
-
   check_widthorheight();
 
   if (game_on){
     draw_board();
     make_board();
-    if (chess_path.length != 0){
+    if (chess_path.length !== 0){
       drawing_circle_to_where_to_go();
     }
   }
   else{
     textAlign(CENTER);
-    fill("black")
+    fill("black");
     textSize(square_size);
     if (turn){
       text("WHITE WIN", board_height/2,board_height/2);
@@ -123,7 +122,8 @@ function draw_board(){
     for (let col = 0; col < 8; col++) {
       if ((row + col) % 2 === 0) {
         fill(255);
-      } else {
+      } 
+      else {
         fill(100); 
       }
       rect(col * square_size, row * square_size, square_size, square_size);
@@ -169,9 +169,9 @@ function all_pieces_initial(){
   for (let amount = 1; amount >= 0; amount --){
     append(white_all_pieces, {img : rookimg, x : amount * 7 , y :7, name: "rook", did_move: false});
   }
-// -------------------------------------------------- make black piece
+  // -------------------------------------------------- make black piece
 
-// let pawn = (img = pawnimg, x = 0, y = width - width/8);
+  // let pawn = (img = pawnimg, x = 0, y = width - width/8);
   for (let amount = 7; amount >= 0; amount --){
     append(black_all_pieces, {img : b_pawnimg, x : amount, y :  1, name: "pawn",pawn_go_pace : -2});
   }
@@ -219,7 +219,6 @@ function mousePressed(){
               break;
             }
             else if (item.name === "rook" && current_selected.did_move === false && item.did_move === false && item.x >= mouse_press_pos.x -2 && item.x === 0 ){
-              print("it came here")
               let rook_pos = white_all_pieces.indexOf(item);
               white_all_pieces[rook_pos].x = 3;
               mouse_press_pos = {x:2,y:7};
@@ -233,7 +232,7 @@ function mousePressed(){
         white_all_pieces[pos].y = mouse_press_pos.y;
         for (let item of black_all_pieces){
           if (item.x === mouse_press_pos.x && item.y === mouse_press_pos.y){
-            deleted_piece = black_all_pieces.indexOf(item)
+            deleted_piece = black_all_pieces.indexOf(item);
             if (item.name === "king"){
               game_on = false;
             }
@@ -270,7 +269,7 @@ function mousePressed(){
             if (item.name === "king"){
               game_on = false;
             }
-            white_all_pieces.splice(deleted_piece,1)
+            white_all_pieces.splice(deleted_piece,1);
             
             break;
           }
@@ -281,7 +280,7 @@ function mousePressed(){
       }
       current_selected = null;
       turn = !turn;
-      }
+    }
     else{
       current_selected = null;
     }
@@ -296,20 +295,20 @@ function mousePressed(){
 
 
 function can_go_eat(){
-  chess_path = []
+  chess_path = [];
   
   if (current_selected.name === "pawn"){
     if (!turn){
-      let pawn_weird_attack_thing = [[current_selected.x +1,current_selected.y -1],[current_selected.x -1,current_selected.y -1]]
+      let pawn_weird_attack_thing = [[current_selected.x +1,current_selected.y -1],[current_selected.x -1,current_selected.y -1]];
       for (let [x_move,y_move] of pawn_weird_attack_thing){
         for (let black of black_all_pieces){
           if (black.x === x_move & black.y === y_move){
-            append(chess_path, {x:x_move, y:y_move})
+            append(chess_path, {x:x_move, y:y_move});
           }
         }
       }
-      if (current_selected.y != 6){
-        current_selected.pawn_go_pace = 1
+      if (current_selected.y !== 6){
+        current_selected.pawn_go_pace = 1;
       }
       for (let length = 1; length <= current_selected.pawn_go_pace ; length ++){
         aiming_x = current_selected.x;
@@ -318,24 +317,24 @@ function can_go_eat(){
           break;
         }
         else if(check_if_out_of_bound(aiming_x,aiming_y)){
-            break;
-          }
+          break;
+        }
         else{
-          append(chess_path, {x :aiming_x, y:aiming_y})
+          append(chess_path, {x :aiming_x, y:aiming_y});
         }
       }
     }
     else{
-      let pawn_weird_attack_thing = [[current_selected.x +1,current_selected.y +1],[current_selected.x -1,current_selected.y +1]]
+      let pawn_weird_attack_thing = [[current_selected.x +1,current_selected.y +1],[current_selected.x -1,current_selected.y +1]];
       for (let [x_move,y_move] of pawn_weird_attack_thing){
         for (let white of white_all_pieces){
           if (white.x === x_move & white.y === y_move){
-            append(chess_path, {x:x_move, y:y_move})
+            append(chess_path, {x:x_move, y:y_move});
           }
         }
       }
-      if (current_selected.y != 1){
-        current_selected.pawn_go_pace = -1
+      if (current_selected.y !== 1){
+        current_selected.pawn_go_pace = -1;
       }
       for (let length = -1; length >= current_selected.pawn_go_pace ; length --){
         aiming_x = current_selected.x;
@@ -344,44 +343,50 @@ function can_go_eat(){
           break;
         }
         else if(check_if_out_of_bound(aiming_x,aiming_y)){
-            break;
-          }
+          break;
+        }
         else{
-          append(chess_path, {x :aiming_x, y:aiming_y})
+          append(chess_path, {x :aiming_x, y:aiming_y});
         }
       }
     }
-    
-    
   }
 
   else if (current_selected.name === "king"){
-
+    let king_exclusive_chess_path = [];
     for (let [dir_x,dir_y] of king_direction){
       aiming_x = current_selected.x + dir_x;
       aiming_y = current_selected.y + dir_y;
       if (!looping_through_all_piece_and_check(aiming_x,aiming_y) && !check_if_out_of_bound(aiming_x,aiming_y)){
-        append(chess_path, {x:aiming_x,y:aiming_y})
+        append(chess_path, {x:aiming_x,y:aiming_y});
       }
     }
     if (current_selected.did_move === false){
-        for (let [dir_x,dir_y] of castle_direction){
-          for (let length = 1; length <= 8; length ++){
-            aiming_x = current_selected.x + length * dir_x;
-            aiming_y = current_selected.y;
-              if (looping_through_all_piece_and_check(aiming_x,aiming_y)){
-                break;                
-              }
-              else{
-                append(chess_path, {x:aiming_x,y:aiming_y})
-              }
-          } 
+      for (let [dir_x,dir_y] of castle_direction){
+        for (let length = 1; length <= 8; length ++){
+          aiming_x = current_selected.x + length * dir_x;
+          aiming_y = current_selected.y;
+          if (looping_through_all_piece_and_check(aiming_x,aiming_y)){
+            break;                
+          }
+          else{
+            append(king_exclusive_chess_path, {x:aiming_x,y:aiming_y});
+          }
+          
+        } 
+      }
+      print(king_exclusive_chess_path);
+      if (king_exclusive_chess_path[king_exclusive_chess_path.length -1].x > 8 || king_exclusive_chess_path[king_exclusive_chess_path.length -1].x < 0){
+        print("true");
+        king_exclusive_chess_path = [];
+      }
+      if (king_exclusive_chess_path.length !== 0){
+        for (let item of king_exclusive_chess_path){
+          append(chess_path, {x:item.x, y:item.y});
         }
       }
-    
-    
+    }
   }
-
   else if (current_selected.name === "queen"){
     
     check_direction_and_moves(queen_direction);
@@ -450,9 +455,9 @@ function selecting_piece(){
 function looping_through_all_piece_and_check(x,y){
   for (let item of white_all_pieces){
     if (item.x === x && item.y === y){
-      if (current_selected.name != "pawn"){
+      if (current_selected.name !== "pawn"){
         if (turn){
-          append(chess_path, {x:x, y:y})
+          append(chess_path, {x:x, y:y});
         }
       }
       return true;
@@ -460,16 +465,16 @@ function looping_through_all_piece_and_check(x,y){
   }
   for (let item of black_all_pieces){
     if (item.x === x && item.y === y){
-      if (current_selected.name != "pawn"){
+      if (current_selected.name !== "pawn"){
         if (!turn){
-        append(chess_path, {x:x, y:y})
+          append(chess_path, {x:x, y:y});
         }
         
       }
       return true;
     }
   }
-  return false
+  return false;
 }
 
 function check_chess_path_see_if_can_go(){
@@ -495,32 +500,44 @@ function drawing_circle_to_where_to_go(){
 
   for (let item of chess_path){
     fill("black");
-    circle(item.x * square_size + square_size /2,item.y * square_size + square_size /2,square_size/4)
+    circle(item.x * square_size + square_size /2,item.y * square_size + square_size /2,square_size/4);
   }
 }
 
 function check_if_out_of_bound(x,y){
   if (x >= 8 || x <= -1 || y >= 8 || y <= -1){
-    return true
+    return true;
   }
-  return false
+  return false;
 }
 
 function check_direction_and_moves(direction){
   for (let [dir_x,dir_y] of direction){
-      for (let length = 1; length <= 8; length ++){
-        aiming_x = current_selected.x + dir_x * length;
-        aiming_y = current_selected.y + dir_y * length;
-        if (looping_through_all_piece_and_check(aiming_x,aiming_y)){
-          break;
-        }
-        else if(check_if_out_of_bound(aiming_x,aiming_y)){
-          break;
-        }
-        else{
-          append(chess_path, {x:aiming_x,y:aiming_y})
-        }
+    for (let length = 1; length <= 8; length ++){
+      aiming_x = current_selected.x + dir_x * length;
+      aiming_y = current_selected.y + dir_y * length;
+      if (looping_through_all_piece_and_check(aiming_x,aiming_y)){
+        break;
+      }
+      else if(check_if_out_of_bound(aiming_x,aiming_y)){
+        break;
+      }
+      else{
+        append(chess_path, {x:aiming_x,y:aiming_y});
       }
     }
+  }
 }
 
+function finding_rook(){
+  let whos_is_it = null;
+  if (!turn){
+    whos_is_it = white_all_pieces;
+  }
+  else{
+    whos_is_it = black_all_pieces;
+  }
+  for (let item of whos_is_it){
+
+  }
+}
