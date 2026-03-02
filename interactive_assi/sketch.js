@@ -5,10 +5,14 @@
 // info about the chess game:
 // what it has: white/black all_pieces, basic movement for all pieces
 //              pieces cant go through each other, any scale chess board
+//              pawn can eat (no en passant), dark circle so you know where
+//              the piece can go, both king can castle if them or the rook have not move
+// 
 // *Also if the black pieces looks off its cause i cant find any good image
 //              
 // Extra for Experts:
-// - make the chess board with the window scale
+// - make the everything with the window scale with each other
+// - 
 
 
 let square_size;
@@ -21,6 +25,13 @@ let knightimg;
 let bishopimg;
 let rookimg;
 
+let b_pawnimg;
+let b_kingimg;
+let b_queenimg;
+let b_knightimg;
+let b_bishopimg;
+let b_rookimg;
+
 let white_all_pieces = [];
 let black_all_pieces = [];
 
@@ -30,15 +41,18 @@ let knight_direction = [[-1,2],[1,2],[2,1],[2,-1],[1,-2],[-1,-2],[-2,-1],[-2,1]]
 let queen_direction = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]]
 let bishop_direction = [[1,1], [-1,1], [-1,-1],[1,-1]]
 let rook_direction = [[0,1],[1,0],[0,-1],[-1,0]]
+let king_direction = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]];
+let castle_direction = [[1,0],[-1,0]];
 
 let mouse_press_pos;
 let current_selected;
 let moving_eating;
 
 let can_go = false;
-let chess_path;
+let chess_path = [];
 
 let turn = false;
+let game_on = true;
 
 function preload(){
   pawnimg = loadImage("assets/pawn.png");
@@ -70,10 +84,25 @@ function draw() {
 
   check_widthorheight();
 
-  
-  draw_board();
-  make_board();
-
+  if (game_on){
+    draw_board();
+    make_board();
+    if (chess_path.length != 0){
+      drawing_circle_to_where_to_go();
+    }
+  }
+  else{
+    textAlign(CENTER);
+    fill("black")
+    textSize(square_size);
+    if (turn){
+      text("WHITE WIN", board_height/2,board_height/2);
+    }
+    else{
+      text("BLACK WIN", board_height/2,board_height/2);
+    }
+  }
+    
 }
 
 function make_board(){
@@ -121,7 +150,7 @@ function all_pieces_initial(){
   }
   
   // let king = (img = kingimg, x = 0, y = width - width/8);
-  append(white_all_pieces, {img : kingimg, x : 4, y : 7 , name: "king"});
+  append(white_all_pieces, {img : kingimg, x : 4, y : 7 , name: "king", did_move: false});
 
   // let queen = (img = queenimg, x = 0, y = width - width/8);
   append(white_all_pieces, {img : queenimg, x : 3, y : 7, name: "queen"});
@@ -138,17 +167,17 @@ function all_pieces_initial(){
 
   // let rook = ;
   for (let amount = 1; amount >= 0; amount --){
-    append(white_all_pieces, {img : rookimg, x : amount * 7 , y :7, name: "rook"});
+    append(white_all_pieces, {img : rookimg, x : amount * 7 , y :7, name: "rook", did_move: false});
   }
 // -------------------------------------------------- make black piece
 
 // let pawn = (img = pawnimg, x = 0, y = width - width/8);
   for (let amount = 7; amount >= 0; amount --){
-    append(black_all_pieces, {img : b_pawnimg, x : amount, y :  1, name: "pawn",pawn_go_pace : 2});
+    append(black_all_pieces, {img : b_pawnimg, x : amount, y :  1, name: "pawn",pawn_go_pace : -2});
   }
   
   // let king = (img = kingimg, x = 0, y = width - width/8);
-  append(black_all_pieces, {img : b_kingimg, x : 4, y : 0 , name: "king"});
+  append(black_all_pieces, {img : b_kingimg, x : 4, y : 0 , name: "king", did_move: false});
 
   // let queen = (img = queenimg, x = 0, y = width - width/8);
   append(black_all_pieces, {img : b_queenimg, x : 3, y : 0, name: "queen"});
@@ -165,7 +194,7 @@ function all_pieces_initial(){
 
   // let rook = ;
   for (let amount = 1; amount >= 0; amount --){
-    append(black_all_pieces, {img : b_rookimg, x : amount * 7 , y :0, name: "rook"});
+    append(black_all_pieces, {img : b_rookimg, x : amount * 7 , y :0, name: "rook", did_move: false});
   }
 }
   
@@ -174,20 +203,81 @@ function all_pieces_initial(){
 function mousePressed(){
   mouse_press_pos = {x : floor(mouseX / (board_height / 8)), y : floor(mouseY/ (board_height / 8))};
   if (current_selected){
-    can_go_eat();
+    check_chess_path_see_if_can_go();
     // assuming there is no one to eat
     if (can_go){
+      
+      let deleted_piece;
+      
       if (!turn){
+        if (current_selected.name === "king"){
+          for (let item of white_all_pieces){
+            if (item.name === "rook" && current_selected.did_move === false && item.did_move === false && item.x === mouse_press_pos.x  + 1 && item.x === 7 ){
+              let rook_pos = white_all_pieces.indexOf(item);
+              let king_pos = white_all_pieces.indexOf(current_selected);
+              white_all_pieces[rook_pos].x = 5;
+              break;
+            }
+            else if (item.name === "rook" && current_selected.did_move === false && item.did_move === false && item.x >= mouse_press_pos.x -2 && item.x === 0 ){
+              print("it came here")
+              let rook_pos = white_all_pieces.indexOf(item);
+              white_all_pieces[rook_pos].x = 3;
+              mouse_press_pos = {x:2,y:7};
+              break;
+            }
+          }
+        }
+        
         let pos = white_all_pieces.indexOf(current_selected);
         white_all_pieces[pos].x = mouse_press_pos.x;
         white_all_pieces[pos].y = mouse_press_pos.y;
+        for (let item of black_all_pieces){
+          if (item.x === mouse_press_pos.x && item.y === mouse_press_pos.y){
+            deleted_piece = black_all_pieces.indexOf(item)
+            if (item.name === "king"){
+              game_on = false;
+            }
+            black_all_pieces.splice(deleted_piece,1);            
+            break;
+          }
+        }
         
       }
       else{
+        if (current_selected.name === "king"){
+          for (let item of black_all_pieces){
+            if (item.name === "rook" && current_selected.did_move === false && item.did_move === false && item.x === mouse_press_pos.x  + 1 && item.x === 7 ){
+              let rook_pos = black_all_pieces.indexOf(item);
+              let king_pos = black_all_pieces.indexOf(current_selected);
+              black_all_pieces[rook_pos].x = 5;
+              black_all_pieces[king_pos].x = 6;
+              break;
+            }
+            else if (item.name === "rook" && current_selected.did_move === false && item.did_move === false && item.x >= mouse_press_pos.x -2 && item.x === 0 ){
+              let rook_pos = black_all_pieces.indexOf(item);
+              black_all_pieces[rook_pos].x = 3;
+              mouse_press_pos = {x:2, y:0};
+              break;
+            }
+          }
+        }
         let pos = black_all_pieces.indexOf(current_selected);
         black_all_pieces[pos].x = mouse_press_pos.x;
         black_all_pieces[pos].y = mouse_press_pos.y;
-        
+        for (let item of white_all_pieces){
+          if (item.x === mouse_press_pos.x && item.y === mouse_press_pos.y){
+            deleted_piece = white_all_pieces.indexOf(item);
+            if (item.name === "king"){
+              game_on = false;
+            }
+            white_all_pieces.splice(deleted_piece,1)
+            
+            break;
+          }
+        }
+      } 
+      if (current_selected.name === "rook" || current_selected.name === "king"){
+        current_selected.did_move = true;
       }
       current_selected = null;
       turn = !turn;
@@ -196,7 +286,7 @@ function mousePressed(){
       current_selected = null;
     }
       
-
+    chess_path = [];
   }
   else{
     selecting_piece();
@@ -209,69 +299,92 @@ function can_go_eat(){
   chess_path = []
   
   if (current_selected.name === "pawn"){
-    
-    let black_or_white;
     if (!turn){
-      
-      black_or_white = 1;
+      let pawn_weird_attack_thing = [[current_selected.x +1,current_selected.y -1],[current_selected.x -1,current_selected.y -1]]
+      for (let [x_move,y_move] of pawn_weird_attack_thing){
+        for (let black of black_all_pieces){
+          if (black.x === x_move & black.y === y_move){
+            append(chess_path, {x:x_move, y:y_move})
+          }
+        }
+      }
       if (current_selected.y != 6){
         current_selected.pawn_go_pace = 1
-        
+      }
+      for (let length = 1; length <= current_selected.pawn_go_pace ; length ++){
+        aiming_x = current_selected.x;
+        aiming_y = current_selected.y - length;
+        if (looping_through_all_piece_and_check(aiming_x,aiming_y)){
+          break;
+        }
+        else if(check_if_out_of_bound(aiming_x,aiming_y)){
+            break;
+          }
+        else{
+          append(chess_path, {x :aiming_x, y:aiming_y})
+        }
       }
     }
     else{
-      black_or_white = -1;
+      let pawn_weird_attack_thing = [[current_selected.x +1,current_selected.y +1],[current_selected.x -1,current_selected.y +1]]
+      for (let [x_move,y_move] of pawn_weird_attack_thing){
+        for (let white of white_all_pieces){
+          if (white.x === x_move & white.y === y_move){
+            append(chess_path, {x:x_move, y:y_move})
+          }
+        }
+      }
       if (current_selected.y != 1){
-        current_selected.pawn_go_pace = -2;
+        current_selected.pawn_go_pace = -1
+      }
+      for (let length = -1; length >= current_selected.pawn_go_pace ; length --){
+        aiming_x = current_selected.x;
+        aiming_y = current_selected.y - length;
+        if (looping_through_all_piece_and_check(aiming_x,aiming_y)){
+          break;
+        }
+        else if(check_if_out_of_bound(aiming_x,aiming_y)){
+            break;
+          }
+        else{
+          append(chess_path, {x :aiming_x, y:aiming_y})
+        }
       }
     }
     
-    for (let length = black_or_white; length != current_selected.pawn_go_pace + black_or_white; length += black_or_white){
-      aiming_x = current_selected.x;
-      aiming_y = current_selected.y - length;
-      if (looping_through_all_piece_and_check(aiming_x,aiming_y)){
-        break;
-      }
-      else{
-        append(chess_path, {x :aiming_x, y:aiming_y})
-      }
-    }
+    
   }
 
   else if (current_selected.name === "king"){
-    let dis_x = Math.abs(mouse_press_pos.x - current_selected.x)
-    let dis_y = Math.abs(mouse_press_pos.y - current_selected.y)
-    if (dis_x <= 1 && dis_y <= 1 && !(dis_x === 0 && dis_y === 0)){
-      for (let item of white_all_pieces){
-        if (item.x === mouse_press_pos.x && item.y === mouse_press_pos.y){
-          can_go = false;
-          break;
-        }
-        else{
-          can_go = true;
+
+    for (let [dir_x,dir_y] of king_direction){
+      aiming_x = current_selected.x + dir_x;
+      aiming_y = current_selected.y + dir_y;
+      if (!looping_through_all_piece_and_check(aiming_x,aiming_y) && !check_if_out_of_bound(aiming_x,aiming_y)){
+        append(chess_path, {x:aiming_x,y:aiming_y})
+      }
+    }
+    if (current_selected.did_move === false){
+        for (let [dir_x,dir_y] of castle_direction){
+          for (let length = 1; length <= 8; length ++){
+            aiming_x = current_selected.x + length * dir_x;
+            aiming_y = current_selected.y;
+              if (looping_through_all_piece_and_check(aiming_x,aiming_y)){
+                break;                
+              }
+              else{
+                append(chess_path, {x:aiming_x,y:aiming_y})
+              }
+          } 
         }
       }
-      
-    }
-    else{
-      can_go = false;
-    }
+    
+    
   }
 
   else if (current_selected.name === "queen"){
     
-    for (let [dir_x,dir_y] of queen_direction){
-      for (let length = 1; length <= 8; length ++){
-        aiming_x = current_selected.x + dir_x * length;
-        aiming_y = current_selected.y + dir_y * length;
-        if (looping_through_all_piece_and_check(aiming_x,aiming_y)){
-          break;
-        }
-        else{
-          append(chess_path, {x:aiming_x,y:aiming_y})
-        }
-      }
-    }
+    check_direction_and_moves(queen_direction);
   }
 
   else if (current_selected.name === "knight"){
@@ -279,8 +392,15 @@ function can_go_eat(){
       aiming_x = current_selected.x + dir_x;
       aiming_y = current_selected.y + dir_y;
 
-      if (!looping_through_all_piece_and_check(aiming_x,aiming_y)){
-        append(chess_path, {x:aiming_x, y:aiming_y})
+      if (looping_through_all_piece_and_check(aiming_x,aiming_y)){
+        ;
+        
+      }
+      else if(check_if_out_of_bound(aiming_x,aiming_y)){
+        ;
+      }
+      else{
+        append(chess_path, {x:aiming_x, y:aiming_y});
       }
       
     }
@@ -288,36 +408,14 @@ function can_go_eat(){
   }
 
   else if (current_selected.name === "bishop"){
-    for (let [dir_x,dir_y] of bishop_direction){
-      for (let length = 1; length <= 8; length ++){
-        aiming_x = current_selected.x + dir_x * length;
-        aiming_y = current_selected.y + dir_y * length;
-        if (looping_through_all_piece_and_check(aiming_x,aiming_y)){
-          break;
-        }
-        else{
-          append(chess_path, {x:aiming_x,y:aiming_y})
-        }
-      }
-    }
+    check_direction_and_moves(bishop_direction);
     
   }
 
   else if (current_selected.name === "rook"){
-    for (let [dir_x,dir_y] of rook_direction){
-      for (let length = 1; length <= 8; length ++){
-        aiming_x = current_selected.x + dir_x * length;
-        aiming_y = current_selected.y + dir_y * length;
-        if (looping_through_all_piece_and_check(aiming_x,aiming_y)){
-          break;
-        }
-        else{
-          append(chess_path, {x:aiming_x,y:aiming_y})
-        }
-      }
-    }
+    check_direction_and_moves(rook_direction);
   }
-  check_chess_path_see_if_can_go();
+  
 }
 
 
@@ -326,6 +424,7 @@ function selecting_piece(){
     for (let chess of white_all_pieces){
       if (chess.x === mouse_press_pos.x && chess.y === mouse_press_pos.y){
         current_selected = chess;
+        can_go_eat();
         break;
       }
       else{
@@ -337,6 +436,7 @@ function selecting_piece(){
     for (let chess of black_all_pieces){
       if (chess.x === mouse_press_pos.x && chess.y === mouse_press_pos.y){
         current_selected = chess;
+        can_go_eat();
         break;
       }
       else{
@@ -344,17 +444,28 @@ function selecting_piece(){
       }
     }
   }
-    
+  
 }
 
 function looping_through_all_piece_and_check(x,y){
   for (let item of white_all_pieces){
     if (item.x === x && item.y === y){
+      if (current_selected.name != "pawn"){
+        if (turn){
+          append(chess_path, {x:x, y:y})
+        }
+      }
       return true;
     }
   }
   for (let item of black_all_pieces){
     if (item.x === x && item.y === y){
+      if (current_selected.name != "pawn"){
+        if (!turn){
+        append(chess_path, {x:x, y:y})
+        }
+        
+      }
       return true;
     }
   }
@@ -362,7 +473,6 @@ function looping_through_all_piece_and_check(x,y){
 }
 
 function check_chess_path_see_if_can_go(){
-  print(chess_path)
   if (chess_path.length === 0){
     can_go = false;
   }
@@ -375,10 +485,42 @@ function check_chess_path_see_if_can_go(){
       }
       else{
         can_go = false;
-        print("here");
       }
     }
     
   }
-  
 }
+
+function drawing_circle_to_where_to_go(){
+
+  for (let item of chess_path){
+    fill("black");
+    circle(item.x * square_size + square_size /2,item.y * square_size + square_size /2,square_size/4)
+  }
+}
+
+function check_if_out_of_bound(x,y){
+  if (x >= 8 || x <= -1 || y >= 8 || y <= -1){
+    return true
+  }
+  return false
+}
+
+function check_direction_and_moves(direction){
+  for (let [dir_x,dir_y] of direction){
+      for (let length = 1; length <= 8; length ++){
+        aiming_x = current_selected.x + dir_x * length;
+        aiming_y = current_selected.y + dir_y * length;
+        if (looping_through_all_piece_and_check(aiming_x,aiming_y)){
+          break;
+        }
+        else if(check_if_out_of_bound(aiming_x,aiming_y)){
+          break;
+        }
+        else{
+          append(chess_path, {x:aiming_x,y:aiming_y})
+        }
+      }
+    }
+}
+
