@@ -9,6 +9,7 @@
 //              the piece can go, both king can castle if them or the rook have not move
 // 
 // *Also if the black pieces looks off its cause i cant find any good image
+// 
 //              
 // Extra for Experts:
 // - make the everything with the window scale with each other
@@ -17,7 +18,7 @@
 
 let square_size;
 
-
+// WHITE PIECES
 let pawnimg;
 let kingimg;
 let queenimg;
@@ -25,6 +26,7 @@ let knightimg;
 let bishopimg;
 let rookimg;
 
+// BLACK PIECES
 let b_pawnimg;
 let b_kingimg;
 let b_queenimg;
@@ -37,6 +39,7 @@ let black_all_pieces = [];
 
 let board_height;
 
+// ALL DIRECTION
 let knight_direction = [[-1,2],[1,2],[2,1],[2,-1],[1,-2],[-1,-2],[-2,-1],[-2,1]];
 let queen_direction = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]];
 let bishop_direction = [[1,1], [-1,1], [-1,-1],[1,-1]];
@@ -44,6 +47,7 @@ let rook_direction = [[0,1],[1,0],[0,-1],[-1,0]];
 let king_direction = [[0,1],[1,1],[1,0],[1,-1],[0,-1],[-1,-1],[-1,0],[-1,1]];
 let castle_direction = [[1,0],[-1,0]];
 
+// VARIABLE
 let mouse_press_pos;
 let current_selected;
 let moving_eating;
@@ -54,6 +58,7 @@ let chess_path = [];
 let turn = false;
 let game_on = true;
 
+// LOADING ALL IMAGE
 function preload(){
   pawnimg = loadImage("assets/pawn.png");
   kingimg = loadImage("assets/king.png");
@@ -72,6 +77,7 @@ function preload(){
   
 }
 
+// INITIAL SETUP
 function setup() {
   createCanvas(windowWidth, windowHeight);
   check_widthorheight();
@@ -79,11 +85,12 @@ function setup() {
   
 }
 
+// DRAWING THE THING
 function draw() {
   check_widthorheight();
   createCanvas(board_height, board_height);
   
-
+  // IF GAME IS NOT ENDED
   if (game_on){
     draw_board();
     make_board();
@@ -91,6 +98,7 @@ function draw() {
       drawing_circle_to_where_to_go();
     }
   }
+  // IF THE KING IS EATEN
   else{
     textAlign(CENTER);
     fill("black");
@@ -105,6 +113,7 @@ function draw() {
     
 }
 
+// DRAWING THE CHESS BOARD
 function make_board(){
   for (let item of white_all_pieces){
     // image(item.img, item.x,item.y,square_size,square_size);
@@ -117,7 +126,7 @@ function make_board(){
   }
 }
 
-
+// DRAWING THE CHESS PIECES
 function draw_board(){
   for (let row = 0; row < 8; row++) {
     for (let col = 0; col < 8; col++) {
@@ -132,6 +141,7 @@ function draw_board(){
   }
 }
 
+// CHECKING THE WINDOW W/H
 function check_widthorheight(){
   if (windowHeight < windowWidth){
     square_size = windowHeight / 8;
@@ -143,7 +153,7 @@ function check_widthorheight(){
   }
 }
 
-
+// MAKING ALL THE PIECES AND STARTING POSITION
 function all_pieces_initial(){
   // let pawn = (img = pawnimg, x = 0, y = width - width/8);
   for (let amount = 7; amount >= 0; amount --){
@@ -200,14 +210,13 @@ function all_pieces_initial(){
 }
   
 
-
+// WHEN MOUSE IS PRESSED ON BOARD
 function mousePressed(){
   mouse_press_pos = {x : floor(mouseX / (board_height / 8)), y : floor(mouseY/ (board_height / 8))};
+  // IF A PIECE IS CURRENT SELECTED
   if (current_selected){
     check_chess_path_see_if_can_go();
-    // assuming there is no one to eat
     if (can_go){
-      
       let deleted_piece;
       
       if (!turn){
@@ -288,6 +297,7 @@ function mousePressed(){
       
     chess_path = [];
   }
+  // IF NOT THEN SELECT A PIECE
   else{
     selecting_piece();
   }
