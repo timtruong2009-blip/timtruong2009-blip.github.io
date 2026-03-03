@@ -80,8 +80,9 @@ function setup() {
 }
 
 function draw() {
-  createCanvas(windowWidth, windowHeight);
   check_widthorheight();
+  createCanvas(board_height, board_height);
+  
 
   if (game_on){
     draw_board();
@@ -132,13 +133,13 @@ function draw_board(){
 }
 
 function check_widthorheight(){
-  if (height < width){
-    square_size = height / 8;
-    board_height = height;
+  if (windowHeight < windowWidth){
+    square_size = windowHeight / 8;
+    board_height = windowHeight;
   }
   else{
-    square_size = width /8;
-    board_height = width;
+    square_size = windowWidth /8;
+    board_height = windowWidth;
   }
 }
 
