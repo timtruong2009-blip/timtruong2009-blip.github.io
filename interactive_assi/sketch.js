@@ -434,7 +434,7 @@ function can_go_eat(){
   
 }
 
-
+// SEE 
 function selecting_piece(){
   if (!turn){
     for (let chess of white_all_pieces){
