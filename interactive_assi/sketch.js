@@ -9,7 +9,7 @@
 //              the piece can go, both king can castle if them or the rook have not move
 // 
 // *Also if the black pieces looks off its cause i cant find any good image
-// 
+// *This is over 
 //              
 // Extra for Experts:
 // - make the everything with the window scale with each other
@@ -304,7 +304,7 @@ function mousePressed(){
 }
 
 
-
+// Check to see if 
 function can_go_eat(){
   chess_path = [];
   
