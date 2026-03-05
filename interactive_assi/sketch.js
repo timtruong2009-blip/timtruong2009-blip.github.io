@@ -34,9 +34,11 @@ let b_knightimg;
 let b_bishopimg;
 let b_rookimg;
 
+// ALL PIECES
 let white_all_pieces = [];
 let black_all_pieces = [];
 
+// BOARD HEIGHT
 let board_height;
 
 // ALL DIRECTION
@@ -52,9 +54,9 @@ let mouse_press_pos;
 let current_selected;
 let moving_eating;
 
+// COOL VARIABLE
 let can_go = false;
 let chess_path = [];
-
 let turn = false;
 let game_on = true;
 
@@ -434,7 +436,7 @@ function can_go_eat(){
   
 }
 
-// SEE 
+// SEE IF WHERE YOU CLICK HAVE A PIECE THERE OR NOT
 function selecting_piece(){
   if (!turn){
     for (let chess of white_all_pieces){
@@ -463,6 +465,7 @@ function selecting_piece(){
   
 }
 
+// CHECKING THE LOCATION X AND Y TO SEE IF THERE IS ANY OPPOSITE COLOR PIECE THERE
 function looping_through_all_piece_and_check(x,y){
   for (let item of white_all_pieces){
     if (item.x === x && item.y === y){
@@ -488,6 +491,7 @@ function looping_through_all_piece_and_check(x,y){
   return false;
 }
 
+// CHECK IF THE POSSIBLE MOVES THAT A PIECE CAN MAKE IS WHERE YOU CLICK IT
 function check_chess_path_see_if_can_go(){
   if (chess_path.length === 0){
     can_go = false;
@@ -507,6 +511,7 @@ function check_chess_path_see_if_can_go(){
   }
 }
 
+// SHOWING WHERE IS ALL THE LEGAL MOVES YOU CAN MAKE
 function drawing_circle_to_where_to_go(){
 
   for (let item of chess_path){
@@ -515,6 +520,7 @@ function drawing_circle_to_where_to_go(){
   }
 }
 
+// IF OUT OF BOUND THEN YOU CANT GO OUT
 function check_if_out_of_bound(x,y){
   if (x >= 8 || x <= -1 || y >= 8 || y <= -1){
     return true;
@@ -522,6 +528,7 @@ function check_if_out_of_bound(x,y){
   return false;
 }
 
+// GOT THE DIRECTION IN A LIST AND LOOP THROUGH IT GOING CHECK SQUARE
 function check_direction_and_moves(direction){
   for (let [dir_x,dir_y] of direction){
     for (let length = 1; length <= 8; length ++){
@@ -540,6 +547,7 @@ function check_direction_and_moves(direction){
   }
 }
 
+// EXCLUSIVE FOR THE KING TO TRY AND CASTLE IF THERE IS A ROOK
 function finding_rook(){
   let whos_is_it = null;
   if (!turn){
