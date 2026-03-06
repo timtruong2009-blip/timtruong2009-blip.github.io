@@ -8,5 +8,5 @@
 - [art](cool_art)
 
 ## Assignments
-- Add asignment here.
 - [interactive scene](interactive_assi)
+- [arrays and object notation](array_object)
