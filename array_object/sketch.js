@@ -6,9 +6,12 @@
 // - describe what you did to take this project "above and beyond"
 
 let pos = {x: 0, y: 0};
-let you;
-let guests;
+let youPlaying = "";
 let square_size;
+
+
+
+let dataforParty;
 
 // WHITE PIECES
 let pawnimg;
@@ -27,8 +30,7 @@ let b_bishopimg;
 let b_rookimg;
 
 // ALL PIECES
-let white_all_pieces = [];
-let black_all_pieces = [];
+
 
 // BOARD HEIGHT
 let board_height;
@@ -79,8 +81,11 @@ function preload() {
   you = partyLoadMyShared();
   guests = partyLoadGuestShareds();
 
-  // tell p5.party to sync the pos object
-  pos = partyLoadShared("pos", pos);
+  // tell p5.party to sync the object
+  dataforParty = partyLoadShared("meh", {
+    white_all_pieces: [],
+    black_all_pieces: [],
+  });
   
 }
 
@@ -91,6 +96,7 @@ function setup() {
   
 }
 function draw() {
+  print(dataforParty);
   updateBoardSize();
   createCanvas(board_height, board_height);
   // IF GAME IS NOT ENDED
@@ -114,6 +120,9 @@ function draw() {
     }
   }
 }
+
+
+
 function updateBoardSize(){
   if (windowHeight < windowWidth){
     square_size = windowHeight / 8;

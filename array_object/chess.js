@@ -2,65 +2,65 @@
 function allpiecePosition(){
 // let pawn = (img = pawnimg, x = 0, y = width - width/8);
     for (let amount = 7; amount >= 0; amount --){
-      append(white_all_pieces, {img : pawnimg, x : amount, y :  6, name: "pawn",pawn_go_pace : 2});
+      dataforParty.white_all_pieces.push({img : pawnimg, x : amount, y :  6, name: "pawn",pawn_go_pace : 2});
     }
     
     // let king = (img = kingimg, x = 0, y = width - width/8);
-    append(white_all_pieces, {img : kingimg, x : 4, y : 7 , name: "king", did_move: false});
+    dataforParty.white_all_pieces.push({img : kingimg, x : 4, y : 7 , name: "king", did_move: false});
   
     // let queen = (img = queenimg, x = 0, y = width - width/8);
-    append(white_all_pieces, {img : queenimg, x : 3, y : 7, name: "queen"});
+    dataforParty.white_all_pieces.push({img : queenimg, x : 3, y : 7, name: "queen"});
   
     // let knight = (img = knightimg, x = 0, y = width - width/8);
     for (let amount = 1; amount >= 0; amount --){
-      append(white_all_pieces, {img : knightimg, x : amount*5 + 1, y : 7 , name: "knight"});
+      dataforParty.white_all_pieces.push({img : knightimg, x : amount*5 + 1, y : 7 , name: "knight"});
     }
   
     // let bishop = ;
     for (let amount = 1; amount >= 0; amount --){
-      append(white_all_pieces, {img : bishopimg, x : amount * 3 + 2, y : 7, name: "bishop"});
+      dataforParty.white_all_pieces.push({img : bishopimg, x : amount * 3 + 2, y : 7, name: "bishop"});
     }
   
     // let rook = ;
     for (let amount = 1; amount >= 0; amount --){
-      append(white_all_pieces, {img : rookimg, x : amount * 7 , y :7, name: "rook", did_move: false});
+      dataforParty.white_all_pieces.push({img : rookimg, x : amount * 7 , y :7, name: "rook", did_move: false});
     }
     // -------------------------------------------------- make black piece
   
     // let pawn = (img = pawnimg, x = 0, y = width - width/8);
     for (let amount = 7; amount >= 0; amount --){
-      append(black_all_pieces, {img : b_pawnimg, x : amount, y :  1, name: "pawn",pawn_go_pace : -2});
+      dataforParty.black_all_pieces.push({img : b_pawnimg, x : amount, y :  1, name: "pawn",pawn_go_pace : -2});
     }
     
     // let king = (img = kingimg, x = 0, y = width - width/8);
-    append(black_all_pieces, {img : b_kingimg, x : 4, y : 0 , name: "king", did_move: false});
+    dataforParty.black_all_pieces.push({img : b_kingimg, x : 4, y : 0 , name: "king", did_move: false});
   
     // let queen = (img = queenimg, x = 0, y = width - width/8);
-    append(black_all_pieces, {img : b_queenimg, x : 3, y : 0, name: "queen"});
+    dataforParty.black_all_pieces.push({img : b_queenimg, x : 3, y : 0, name: "queen"});
   
     // let knight = (img = knightimg, x = 0, y = width - width/8);
     for (let amount = 1; amount >= 0; amount --){
-      append(black_all_pieces, {img : b_knightimg, x : amount*5 + 1, y : 0 , name: "knight"});
+      dataforParty.black_all_pieces.push({img : b_knightimg, x : amount*5 + 1, y : 0 , name: "knight"});
     }
   
     // let bishop = ;
     for (let amount = 1; amount >= 0; amount --){
-      append(black_all_pieces, {img : b_bishopimg, x : amount * 3 + 2, y : 0, name: "bishop"});
+      dataforParty.black_all_pieces.push({img : b_bishopimg, x : amount * 3 + 2, y : 0, name: "bishop"});
     }
   
     // let rook = ;
     for (let amount = 1; amount >= 0; amount --){
-      append(black_all_pieces, {img : b_rookimg, x : amount * 7 , y :0, name: "rook", did_move: false});
+      dataforParty.black_all_pieces.push({img : b_rookimg, x : amount * 7 , y :0, name: "rook", did_move: false});
     }
   }
   // DRAWING THE CHESS BOARD
 function make_board(){
-    for (let item of white_all_pieces){
+    for (let item of dataforParty.white_all_pieces){
       // image(item.img, item.x,item.y,square_size,square_size);
       image(item.img, item.x * (board_height / 8) ,item.y * (board_height / 8) ,square_size,square_size);
     }
   
-    for (let item of black_all_pieces){
+    for (let item of dataforParty.black_all_pieces){
       // image(item.img, item.x,item.y,square_size,square_size);
       image(item.img, item.x * (board_height / 8) ,item.y * (board_height / 8) ,square_size,square_size);
     }
@@ -86,7 +86,7 @@ function generateLegalMoves(){
       if (!turn){
         let pawn_weird_attack_thing = [[current_selected.x +1,current_selected.y -1],[current_selected.x -1,current_selected.y -1]];
         for (let [x_move,y_move] of pawn_weird_attack_thing){
-          for (let black of black_all_pieces){
+          for (let black of dataforParty.black_all_pieces){
             if (black.x === x_move & black.y === y_move){
               append(chess_path, {x:x_move, y:y_move});
             }
@@ -112,7 +112,7 @@ function generateLegalMoves(){
       else{
         let pawn_weird_attack_thing = [[current_selected.x +1,current_selected.y +1],[current_selected.x -1,current_selected.y +1]];
         for (let [x_move,y_move] of pawn_weird_attack_thing){
-          for (let white of white_all_pieces){
+          for (let white of dataforParty.white_all_pieces){
             if (white.x === x_move & white.y === y_move){
               append(chess_path, {x:x_move, y:y_move});
             }
@@ -211,7 +211,7 @@ function generateLegalMoves(){
 // SEE IF WHERE YOU CLICK HAVE A PIECE THERE OR NOT
 function selectingPiece(){
     if (!turn){
-      for (let chess of white_all_pieces){
+      for (let chess of dataforParty.white_all_pieces){
         if (chess.x === mouse_press_pos.x && chess.y === mouse_press_pos.y){
           current_selected = chess;
           generateLegalMoves();
@@ -223,7 +223,7 @@ function selectingPiece(){
       }
     }
     else{
-      for (let chess of black_all_pieces){
+      for (let chess of dataforParty.black_all_pieces){
         if (chess.x === mouse_press_pos.x && chess.y === mouse_press_pos.y){
           current_selected = chess;
           generateLegalMoves();
@@ -239,7 +239,7 @@ function selectingPiece(){
 
   // CHECKING THE LOCATION X AND Y TO SEE IF THERE IS ANY OPPOSITE COLOR PIECE THERE
 function checkingCollision(x,y){
-    for (let item of white_all_pieces){
+    for (let item of dataforParty.white_all_pieces){
       if (item.x === x && item.y === y){
         if (current_selected.name !== "pawn"){
           if (turn){
@@ -249,7 +249,7 @@ function checkingCollision(x,y){
         return true;
       }
     }
-    for (let item of black_all_pieces){
+    for (let item of dataforParty.black_all_pieces){
       if (item.x === x && item.y === y){
         if (current_selected.name !== "pawn"){
           if (!turn){
@@ -323,12 +323,103 @@ function loopingDirection(direction){
 function findRook(){
     let whos_is_it = null;
     if (!turn){
-      whos_is_it = white_all_pieces;
+      whos_is_it = dataforParty.white_all_pieces;
     }
     else{
-      whos_is_it = black_all_pieces;
+      whos_is_it = dataforParty.black_all_pieces;
     }
     for (let item of whos_is_it){
   
     }
+}
+
+// WHEN A CHESS GAME IS HAPPENING
+function chessState(){
+  if (current_selected){
+    chesspathChecking();
+    if (can_go){
+      let deleted_piece;
+      
+      if (!turn){
+        if (current_selected.name === "king"){
+          for (let item of dataforParty.white_all_pieces){
+            if (item.name === "rook" && current_selected.did_move === false && item.did_move === false && item.x === mouse_press_pos.x  + 1 && item.x === 7 ){
+              let rook_pos = dataforParty.white_all_pieces.indexOf(item);
+              let king_pos = dataforParty.white_all_pieces.indexOf(current_selected);
+              dataforParty.white_all_pieces[rook_pos].x = 5;
+              break;
+            }
+            else if (item.name === "rook" && current_selected.did_move === false && item.did_move === false && item.x >= mouse_press_pos.x -2 && item.x === 0 ){
+              let rook_pos = dataforParty.white_all_pieces.indexOf(item);
+              dataforParty.white_all_pieces[rook_pos].x = 3;
+              mouse_press_pos = {x:2,y:7};
+              break;
+            }
+          }
+        }
+        
+        let pos = dataforParty.white_all_pieces.indexOf(current_selected);
+        dataforParty.white_all_pieces[pos].x = mouse_press_pos.x;
+        dataforParty.white_all_pieces[pos].y = mouse_press_pos.y;
+        for (let item of dataforParty.black_all_pieces){
+          if (item.x === mouse_press_pos.x && item.y === mouse_press_pos.y){
+            deleted_piece = dataforParty.black_all_pieces.indexOf(item);
+            if (item.name === "king"){
+              game_on = false;
+            }
+            dataforParty.black_all_pieces.splice(deleted_piece,1);            
+            break;
+          }
+        }
+        
+      }
+      else{
+        if (current_selected.name === "king"){
+          for (let item of dataforParty.black_all_pieces){
+            if (item.name === "rook" && current_selected.did_move === false && item.did_move === false && item.x === mouse_press_pos.x  + 1 && item.x === 7 ){
+              let rook_pos = dataforParty.black_all_pieces.indexOf(item);
+              let king_pos = dataforParty.black_all_pieces.indexOf(current_selected);
+              dataforParty.black_all_pieces[rook_pos].x = 5;
+              dataforParty.black_all_pieces[king_pos].x = 6;
+              break;
+            }
+            else if (item.name === "rook" && current_selected.did_move === false && item.did_move === false && item.x >= mouse_press_pos.x -2 && item.x === 0 ){
+              let rook_pos = dataforParty.black_all_pieces.indexOf(item);
+              dataforParty.black_all_pieces[rook_pos].x = 3;
+              mouse_press_pos = {x:2, y:0};
+              break;
+            }
+          }
+        }
+        let pos = dataforParty.black_all_pieces.indexOf(current_selected);
+        dataforParty.black_all_pieces[pos].x = mouse_press_pos.x;
+        dataforParty.black_all_pieces[pos].y = mouse_press_pos.y;
+        for (let item of dataforParty.white_all_pieces){
+          if (item.x === mouse_press_pos.x && item.y === mouse_press_pos.y){
+            deleted_piece = dataforParty.white_all_pieces.indexOf(item);
+            if (item.name === "king"){
+              game_on = false;
+            }
+            dataforParty.white_all_pieces.splice(deleted_piece,1);
+            
+            break;
+          }
+        }
+      } 
+      if (current_selected.name === "rook" || current_selected.name === "king"){
+        current_selected.did_move = true;
+      }
+      current_selected = null;
+      turn = !turn;
+    }
+    else{
+      current_selected = null;
+    }
+      
+    chess_path = [];
+  }
+  // IF NOT THEN SELECT A PIECE
+  else{
+    selectingPiece();
+  }
 }
