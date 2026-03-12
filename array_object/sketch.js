@@ -6,12 +6,12 @@
 // - describe what you did to take this project "above and beyond"
 
 let pos = {x: 0, y: 0};
-let youPlaying = "";
 let square_size;
 
 
 
 let dataforParty;
+let activePlayer;
 
 // WHITE PIECES
 let pawnimg;
@@ -85,18 +85,23 @@ function preload() {
   dataforParty = partyLoadShared("meh", {
     white_all_pieces: [],
     black_all_pieces: [],
+    activePlayer: 0,
+    player1: "",
+    player2: "",
+
+
   });
   
 }
 
 function setup() {
+  dataforParty.activePlayer += 1;
   createCanvas(windowWidth, windowHeight);
   updateBoardSize();
   allpiecePosition();
   
 }
 function draw() {
-  print(dataforParty);
   updateBoardSize();
   createCanvas(board_height, board_height);
   // IF GAME IS NOT ENDED
@@ -146,5 +151,12 @@ function mousePressed(){
   chessState();
 }
 
-
+function player1Orplayer2(){
+  if (PartyIsHost()){
+    player1 = "white";
+  }
+  else{
+    player2 = "black";
+  }
+}
 

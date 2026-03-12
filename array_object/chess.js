@@ -1,70 +1,100 @@
 // MAKING ALL THE PIECES AND STARTING POSITION
 function allpiecePosition(){
+  print(dataforParty.activePlayer);
 // let pawn = (img = pawnimg, x = 0, y = width - width/8);
-    for (let amount = 7; amount >= 0; amount --){
-      dataforParty.white_all_pieces.push({img : pawnimg, x : amount, y :  6, name: "pawn",pawn_go_pace : 2});
+  if (dataforParty.activePlayer !== 3){
+    if (partyIsHost){
+      for (let amount = 7; amount >= 0; amount --){
+        dataforParty.white_all_pieces.push({ x : amount, y :  6, name: "pawn",pawn_go_pace : 2});
+      }
+      
+      // let king = (img = kingimg, x = 0, y = width - width/8);
+      dataforParty.white_all_pieces.push({ x : 4, y : 7 , name: "king", did_move: false});
+    
+      // let queen = (img = queenimg, x = 0, y = width - width/8);
+      dataforParty.white_all_pieces.push({ x : 3, y : 7, name: "queen"});
+    
+      // let knight = (img = knightimg, x = 0, y = width - width/8);
+      for (let amount = 1; amount >= 0; amount --){
+        dataforParty.white_all_pieces.push({ x : amount*5 + 1, y : 7 , name: "knight"});
+      }
+    
+      // let bishop = ;
+      for (let amount = 1; amount >= 0; amount --){
+        dataforParty.white_all_pieces.push({ x : amount * 3 + 2, y : 7, name: "bishop"});
+      }
+    
+      // let rook = ;
+      for (let amount = 1; amount >= 0; amount --){
+        dataforParty.white_all_pieces.push({ x : amount * 7 , y :7, name: "rook", did_move: false});
+      }
     }
     
-    // let king = (img = kingimg, x = 0, y = width - width/8);
-    dataforParty.white_all_pieces.push({img : kingimg, x : 4, y : 7 , name: "king", did_move: false});
-  
-    // let queen = (img = queenimg, x = 0, y = width - width/8);
-    dataforParty.white_all_pieces.push({img : queenimg, x : 3, y : 7, name: "queen"});
-  
-    // let knight = (img = knightimg, x = 0, y = width - width/8);
-    for (let amount = 1; amount >= 0; amount --){
-      dataforParty.white_all_pieces.push({img : knightimg, x : amount*5 + 1, y : 7 , name: "knight"});
-    }
-  
-    // let bishop = ;
-    for (let amount = 1; amount >= 0; amount --){
-      dataforParty.white_all_pieces.push({img : bishopimg, x : amount * 3 + 2, y : 7, name: "bishop"});
-    }
-  
-    // let rook = ;
-    for (let amount = 1; amount >= 0; amount --){
-      dataforParty.white_all_pieces.push({img : rookimg, x : amount * 7 , y :7, name: "rook", did_move: false});
-    }
     // -------------------------------------------------- make black piece
   
     // let pawn = (img = pawnimg, x = 0, y = width - width/8);
-    for (let amount = 7; amount >= 0; amount --){
-      dataforParty.black_all_pieces.push({img : b_pawnimg, x : amount, y :  1, name: "pawn",pawn_go_pace : -2});
-    }
+    if (dataforParty.activePlayer >= 2) {
+      print("work");
+      for (let amount = 7; amount >= 0; amount --){
+        dataforParty.black_all_pieces.push({ x : amount, y :  6, name: "pawn",pawn_go_pace : 2});
+      }
+      
+      // let king = (img = kingimg, x = 0, y = width - width/8);
+      dataforParty.black_all_pieces.push({ x : 4, y : 7 , name: "king", did_move: false});
     
-    // let king = (img = kingimg, x = 0, y = width - width/8);
-    dataforParty.black_all_pieces.push({img : b_kingimg, x : 4, y : 0 , name: "king", did_move: false});
-  
-    // let queen = (img = queenimg, x = 0, y = width - width/8);
-    dataforParty.black_all_pieces.push({img : b_queenimg, x : 3, y : 0, name: "queen"});
-  
-    // let knight = (img = knightimg, x = 0, y = width - width/8);
-    for (let amount = 1; amount >= 0; amount --){
-      dataforParty.black_all_pieces.push({img : b_knightimg, x : amount*5 + 1, y : 0 , name: "knight"});
-    }
-  
-    // let bishop = ;
-    for (let amount = 1; amount >= 0; amount --){
-      dataforParty.black_all_pieces.push({img : b_bishopimg, x : amount * 3 + 2, y : 0, name: "bishop"});
-    }
-  
-    // let rook = ;
-    for (let amount = 1; amount >= 0; amount --){
-      dataforParty.black_all_pieces.push({img : b_rookimg, x : amount * 7 , y :0, name: "rook", did_move: false});
+      // let queen = (img = queenimg, x = 0, y = width - width/8);
+      dataforParty.black_all_pieces.push({ x : 3, y : 7, name: "queen"});
+    
+      // let knight = (img = knightimg, x = 0, y = width - width/8);
+      for (let amount = 1; amount >= 0; amount --){
+        dataforParty.black_all_pieces.push({ x : amount*5 + 1, y : 7 , name: "knight"});
+      }
+    
+      // let bishop = ;
+      for (let amount = 1; amount >= 0; amount --){
+        dataforParty.black_all_pieces.push({ x : amount * 3 + 2, y : 7, name: "bishop"});
+      }
+    
+      // let rook = ;
+      for (let amount = 1; amount >= 0; amount --){
+        dataforParty.black_all_pieces.push({ x : amount * 7 , y :7, name: "rook", did_move: false});
+      }
     }
   }
+}
   // DRAWING THE CHESS BOARD
 function make_board(){
+  let whatPieceIsIt;
+  if (partyIsHost()){
     for (let item of dataforParty.white_all_pieces){
       // image(item.img, item.x,item.y,square_size,square_size);
-      image(item.img, item.x * (board_height / 8) ,item.y * (board_height / 8) ,square_size,square_size);
+      whatPieceIsIt = whoAreYou(item.name, "white");
+      image(whatPieceIsIt, item.x * (board_height / 8) ,item.y * (board_height / 8) ,square_size,square_size);
     }
-  
+        
     for (let item of dataforParty.black_all_pieces){
       // image(item.img, item.x,item.y,square_size,square_size);
-      image(item.img, item.x * (board_height / 8) ,item.y * (board_height / 8) ,square_size,square_size);
+      whatPieceIsIt = whoAreYou(item.name, "black");
+      print(board_height);
+      image(whatPieceIsIt, item.x * (board_height / 8) , board_height - square_size * item.y ,square_size,square_size);
     }
   }
+  else{
+    for (let item of dataforParty.white_all_pieces){
+      // image(item.img, item.x,item.y,square_size,square_size);
+      whatPieceIsIt = whoAreYou(item.name, "white");
+      image(whatPieceIsIt, item.x * (board_height / 8)  ,item.y * (board_height / 8) ,square_size,square_size);
+    }
+        
+    for (let item of dataforParty.black_all_pieces){
+      // image(item.img, item.x,item.y,square_size,square_size);
+      whatPieceIsIt = whoAreYou(item.name, "black");
+      image(whatPieceIsIt, item.x * (board_height / 8) ,item.y * (board_height / 8) ,square_size,square_size);
+    }
+  }
+  
+}
+
 function draw_board(){
     for (let row = 0; row < 8; row++) {
       for (let col = 0; col < 8; col++) {
@@ -423,3 +453,48 @@ function chessState(){
     selectingPiece();
   }
 }
+
+function whoAreYou(name, who){
+  if (who === "white"){
+    if (name === "pawn"){
+      return pawnimg;
+    }
+    else if (name === "king"){
+      return kingimg;
+    }
+    else if (name === "queen"){
+      return queenimg;
+    }
+    else if (name === "bishop"){
+      return bishopimg;
+    }
+    else if (name === "knight"){
+      return knightimg;
+    }
+    else if (name === "rook"){
+      return rookimg;
+    }
+  }
+  else{
+    if (name === "pawn"){
+      return b_pawnimg;
+    }
+    else if (name === "king"){
+      return b_kingimg;
+    }
+    else if (name === "queen"){
+      return b_queenimg;
+    }
+    else if (name === "bishop"){
+      return b_bishopimg;
+    }
+    else if (name === "knight"){
+      return b_knightimg;
+    }
+    else if (name === "rook"){
+      return b_rookimg;
+    }
+  }
+}
+
+
