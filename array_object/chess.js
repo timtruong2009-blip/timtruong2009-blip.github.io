@@ -2,8 +2,8 @@
 function allpiecePosition(){
   print(dataforParty.activePlayer);
 // let pawn = (img = pawnimg, x = 0, y = width - width/8);
-  if (dataforParty.activePlayer !== 3){
-    if (partyIsHost){
+  if (dataforParty.activePlayer < 3){
+    if (yourRole === "white"){
       for (let amount = 7; amount >= 0; amount --){
         dataforParty.white_all_pieces.push({ x : amount, y :  6, name: "pawn",pawn_go_pace : 2});
       }
@@ -33,31 +33,30 @@ function allpiecePosition(){
     // -------------------------------------------------- make black piece
   
     // let pawn = (img = pawnimg, x = 0, y = width - width/8);
-    if (dataforParty.activePlayer >= 2) {
-      print("work");
+    else if (yourRole === "black") {
       for (let amount = 7; amount >= 0; amount --){
-        dataforParty.black_all_pieces.push({ x : amount, y :  6, name: "pawn",pawn_go_pace : 2});
+        dataforParty.black_all_pieces.push({ x : amount, y :  1, name: "pawn",pawn_go_pace : 2});
       }
       
       // let king = (img = kingimg, x = 0, y = width - width/8);
-      dataforParty.black_all_pieces.push({ x : 4, y : 7 , name: "king", did_move: false});
+      dataforParty.black_all_pieces.push({ x : 4, y : 0 , name: "king", did_move: false});
     
       // let queen = (img = queenimg, x = 0, y = width - width/8);
-      dataforParty.black_all_pieces.push({ x : 3, y : 7, name: "queen"});
+      dataforParty.black_all_pieces.push({ x : 3, y : 0, name: "queen"});
     
       // let knight = (img = knightimg, x = 0, y = width - width/8);
       for (let amount = 1; amount >= 0; amount --){
-        dataforParty.black_all_pieces.push({ x : amount*5 + 1, y : 7 , name: "knight"});
+        dataforParty.black_all_pieces.push({ x : amount*5 + 1, y : 0 , name: "knight"});
       }
     
       // let bishop = ;
       for (let amount = 1; amount >= 0; amount --){
-        dataforParty.black_all_pieces.push({ x : amount * 3 + 2, y : 7, name: "bishop"});
+        dataforParty.black_all_pieces.push({ x : amount * 3 + 2, y : 0, name: "bishop"});
       }
     
       // let rook = ;
       for (let amount = 1; amount >= 0; amount --){
-        dataforParty.black_all_pieces.push({ x : amount * 7 , y :7, name: "rook", did_move: false});
+        dataforParty.black_all_pieces.push({ x : amount * 7 , y :0, name: "rook", did_move: false});
       }
     }
   }
@@ -65,31 +64,30 @@ function allpiecePosition(){
   // DRAWING THE CHESS BOARD
 function make_board(){
   let whatPieceIsIt;
-  if (partyIsHost()){
+  if (yourRole === "white"){
     for (let item of dataforParty.white_all_pieces){
       // image(item.img, item.x,item.y,square_size,square_size);
       whatPieceIsIt = whoAreYou(item.name, "white");
-      image(whatPieceIsIt, item.x * (board_height / 8) ,item.y * (board_height / 8) ,square_size,square_size);
+      image(whatPieceIsIt, item.x * (board_height / 8) ,item.y * (board_height / 8),square_size,square_size);
     }
         
     for (let item of dataforParty.black_all_pieces){
       // image(item.img, item.x,item.y,square_size,square_size);
       whatPieceIsIt = whoAreYou(item.name, "black");
-      print(board_height);
-      image(whatPieceIsIt, item.x * (board_height / 8) , board_height - square_size * item.y ,square_size,square_size);
+      image(whatPieceIsIt, item.x * (board_height / 8) , item.y * (board_height / 8),square_size,square_size);
     }
   }
-  else{
+  else if (yourRole === "black"){
     for (let item of dataforParty.white_all_pieces){
       // image(item.img, item.x,item.y,square_size,square_size);
       whatPieceIsIt = whoAreYou(item.name, "white");
-      image(whatPieceIsIt, item.x * (board_height / 8)  ,item.y * (board_height / 8) ,square_size,square_size);
+      image(whatPieceIsIt, item.x * (board_height / 8) , board_height - square_size * item.y - square_size,square_size,square_size);
     }
         
     for (let item of dataforParty.black_all_pieces){
       // image(item.img, item.x,item.y,square_size,square_size);
       whatPieceIsIt = whoAreYou(item.name, "black");
-      image(whatPieceIsIt, item.x * (board_height / 8) ,item.y * (board_height / 8) ,square_size,square_size);
+      image(whatPieceIsIt, item.x * (board_height / 8) ,board_height - square_size * item.y - square_size,square_size,square_size);
     }
   }
   
@@ -113,7 +111,7 @@ function generateLegalMoves(){
     chess_path = [];
     
     if (current_selected.name === "pawn"){
-      if (!turn){
+      if (!dataforParty.turn){
         let pawn_weird_attack_thing = [[current_selected.x +1,current_selected.y -1],[current_selected.x -1,current_selected.y -1]];
         for (let [x_move,y_move] of pawn_weird_attack_thing){
           for (let black of dataforParty.black_all_pieces){
@@ -240,7 +238,7 @@ function generateLegalMoves(){
   
 // SEE IF WHERE YOU CLICK HAVE A PIECE THERE OR NOT
 function selectingPiece(){
-    if (!turn){
+    if (!dataforParty.turn){
       for (let chess of dataforParty.white_all_pieces){
         if (chess.x === mouse_press_pos.x && chess.y === mouse_press_pos.y){
           current_selected = chess;
@@ -272,7 +270,7 @@ function checkingCollision(x,y){
     for (let item of dataforParty.white_all_pieces){
       if (item.x === x && item.y === y){
         if (current_selected.name !== "pawn"){
-          if (turn){
+          if (dataforParty.turn){
             append(chess_path, {x:x, y:y});
           }
         }
@@ -282,7 +280,7 @@ function checkingCollision(x,y){
     for (let item of dataforParty.black_all_pieces){
       if (item.x === x && item.y === y){
         if (current_selected.name !== "pawn"){
-          if (!turn){
+          if (!dataforParty.turn){
             append(chess_path, {x:x, y:y});
           }
           
@@ -370,7 +368,7 @@ function chessState(){
     if (can_go){
       let deleted_piece;
       
-      if (!turn){
+      if (!dataforParty.turn){
         if (current_selected.name === "king"){
           for (let item of dataforParty.white_all_pieces){
             if (item.name === "rook" && current_selected.did_move === false && item.did_move === false && item.x === mouse_press_pos.x  + 1 && item.x === 7 ){
@@ -440,7 +438,7 @@ function chessState(){
         current_selected.did_move = true;
       }
       current_selected = null;
-      turn = !turn;
+      dataforParty.turn = !dataforParty.turn;
     }
     else{
       current_selected = null;

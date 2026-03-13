@@ -7,7 +7,7 @@
 
 let pos = {x: 0, y: 0};
 let square_size;
-
+let yourRole;
 
 
 let dataforParty;
@@ -51,7 +51,6 @@ let moving_eating;
 // COOL VARIABLE
 let can_go = false;
 let chess_path = [];
-let turn = false;
 let game_on = true;
 
 let gameWhereItIs = "chess";
@@ -88,6 +87,7 @@ function preload() {
     activePlayer: 0,
     player1: "",
     player2: "",
+    turn: false,
 
 
   });
@@ -95,10 +95,15 @@ function preload() {
 }
 
 function setup() {
+  
   dataforParty.activePlayer += 1;
+  player1Orplayer2();
+
   createCanvas(windowWidth, windowHeight);
   updateBoardSize();
   allpiecePosition();
+  
+  print(dataforParty.white_all_pieces);
   
 }
 function draw() {
@@ -146,17 +151,22 @@ function mousePressed(){
   
   else if (gameWhereItIs === "chess" ){
     mouse_press_pos = {x : floor(mouseX / (board_height / 8)), y : floor(mouseY/ (board_height / 8))};
-    
+    chessState();
   }
-  chessState();
+  
 }
 
 function player1Orplayer2(){
-  if (PartyIsHost()){
-    player1 = "white";
+  
+  if (partyIsHost()){
+    yourRole = "white";
   }
-  else{
-    player2 = "black";
+  else if (dataforParty.activePlayer === 2){
+    yourRole = "black";
   }
+  else {
+    you = "spectator";
+  }
+  print(yourRole);
 }
 
