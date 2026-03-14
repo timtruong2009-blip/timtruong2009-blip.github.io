@@ -1,9 +1,10 @@
 // Arrays and object notation
 // Tim Truong
-// Date
+// March something
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// - I made it so that you can play it online with other
+// - 
 
 let pos = {x: 0, y: 0};
 let square_size;
@@ -51,9 +52,7 @@ let moving_eating;
 // COOL VARIABLE
 let can_go = false;
 let chess_path = [];
-let game_on = true;
 
-let gameWhereItIs = "chess";
 
 
 
@@ -88,7 +87,8 @@ function preload() {
     player1: "",
     player2: "",
     turn: false,
-
+    gameOn: true,
+    gameWhereItIs: "chess",
 
   });
   
@@ -110,9 +110,9 @@ function draw() {
   updateBoardSize();
   createCanvas(board_height, board_height);
   // IF GAME IS NOT ENDED
-  if (game_on){
-    draw_board();
-    make_board();
+  if (dataforParty.gameOn){
+    drawBoard();
+    makeBoard();
     if (chess_path.length !== 0){
       showPremove();
     }
@@ -122,7 +122,7 @@ function draw() {
     textAlign(CENTER);
     fill("black");
     textSize(square_size);
-    if (turn){
+    if (dataforParty.turn){
       text("WHITE WIN", board_height/2,board_height/2);
     }
     else{
@@ -145,12 +145,17 @@ function updateBoardSize(){
 }
 // WHEN MOUSE IS PRESSED ON BOARD
 function mousePressed(){
-  if (gameWhereItIs === "mainscreen" ){
+  if (dataforParty.gameWhereItIs === "mainscreen" ){
 
   }
   
-  else if (gameWhereItIs === "chess" ){
-    mouse_press_pos = {x : floor(mouseX / (board_height / 8)), y : floor(mouseY/ (board_height / 8))};
+  else if (dataforParty.gameWhereItIs === "chess" ){
+    if (yourRole === "white")
+      mouse_press_pos = {x : floor(mouseX / (board_height / 8)), y : floor(mouseY/ (board_height / 8))};
+    else if (yourRole === "black"){
+      mouse_press_pos = {x : floor(mouseX / (board_height / 8)), y : Math.abs(floor(mouseY/ (board_height / 8)) - 7)};
+    }
+    print(mouse_press_pos)
     chessState();
   }
   
