@@ -81,13 +81,13 @@ function makeBoard(){
     for (let item of dataforParty.white_all_pieces){
       // image(item.img, item.x,item.y,square_size,square_size);
       whatPieceIsIt = whoAreYou(item.name, "white");
-      image(whatPieceIsIt, item.x * (board_height / 8) , board_height - square_size * item.y - square_size,square_size,square_size);
+      image(whatPieceIsIt, Math.abs(item.x - 7) * (board_height / 8) , board_height - square_size * item.y - square_size,square_size,square_size);
     }
         
     for (let item of dataforParty.black_all_pieces){
       // image(item.img, item.x,item.y,square_size,square_size);
       whatPieceIsIt = whoAreYou(item.name, "black");
-      image(whatPieceIsIt, item.x * (board_height / 8) ,board_height - square_size * item.y - square_size,square_size,square_size);
+      image(whatPieceIsIt, Math.abs(item.x - 7) * (board_height / 8) ,board_height - square_size * item.y - square_size,square_size,square_size);
     }
   }
   
@@ -321,12 +321,12 @@ function showPremove(){
   if (yourRole === "white")
     for (let item of chess_path){
       fill("black");
-      circle(item.x * square_size + square_size /2,item.y * square_size + square_size /2,square_size/4);
+      circle(item.x * square_size + square_size /2, item.y * square_size + square_size /2,square_size/4);
     }
   else if (yourRole === "black"){
     for (let item of chess_path){
       fill("black");
-      circle(item.x * square_size + square_size /2, Math.abs(item.y - 7) * square_size + square_size /2,square_size/4);
+      circle(Math.abs(item.x - 7) * square_size + square_size /2, Math.abs(item.y - 7) * square_size + square_size /2,square_size/4);
     }
   }
 }

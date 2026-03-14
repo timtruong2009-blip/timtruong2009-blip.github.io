@@ -153,7 +153,7 @@ function mousePressed(){
     if (yourRole === "white")
       mouse_press_pos = {x : floor(mouseX / (board_height / 8)), y : floor(mouseY/ (board_height / 8))};
     else if (yourRole === "black"){
-      mouse_press_pos = {x : floor(mouseX / (board_height / 8)), y : Math.abs(floor(mouseY/ (board_height / 8)) - 7)};
+      mouse_press_pos = {x : Math.abs(floor(mouseX / (board_height / 8)) - 7), y : Math.abs(floor(mouseY/ (board_height / 8)) - 7)};
     }
     print(mouse_press_pos)
     chessState();
