@@ -96,19 +96,23 @@ function makeBoard(){
 function drawBoard(){
     for (let row = 0; row < 8; row++) {
       for (let col = 0; col < 8; col++) {
-        if ((row + col) % 2 === 0) {
-          fill(255);
+        if (row === 1 && col === 1){
+          fill("red")
+        }
+        else if ((row + col) % 2 === 0) {
+          fill(225);
         } 
         else {
           fill(100); 
         }
+        
         rect(col * square_size, row * square_size, square_size, square_size);
       }
     }
 }
   // Check to see if 
-function generateLegalMoves(){
-  chess_path = [];
+function generateLegalMoves(current_selected){
+  let chess_pathway = [];
   
   if (current_selected.name === "pawn"){
     if (yourRole === "white"){
@@ -116,7 +120,7 @@ function generateLegalMoves(){
       for (let [x_move,y_move] of pawn_weird_attack_thing){
         for (let black of dataforParty.black_all_pieces){
           if (black.x === x_move & black.y === y_move){
-            append(chess_path, {x:x_move, y:y_move});
+            append(chess_pathway, {x:x_move, y:y_move});
           }
         }
       }
@@ -133,17 +137,17 @@ function generateLegalMoves(){
           break;
         }
         else{
-          append(chess_path, {x :aiming_x, y:aiming_y});
+          append(chess_pathway, {x :aiming_x, y:aiming_y});
         }
       }
     }
     else if (yourRole === "black"){
-      print("it reached here")
+
       let pawn_weird_attack_thing = [[current_selected.x +1,current_selected.y +1],[current_selected.x -1,current_selected.y +1]];
       for (let [x_move,y_move] of pawn_weird_attack_thing){
         for (let white of dataforParty.white_all_pieces){
           if (white.x === x_move & white.y === y_move){
-            append(chess_path, {x:x_move, y:y_move});
+            append(chess_pathway, {x:x_move, y:y_move});
           }
         }
       }
@@ -153,7 +157,7 @@ function generateLegalMoves(){
       for (let length = -1; length >= current_selected.pawn_go_pace ; length --){
         aiming_x = current_selected.x;
         aiming_y = current_selected.y - length;
-        print("hohohoh");
+
         if (checkingCollision(aiming_x,aiming_y)){
           break;
         }
@@ -161,7 +165,7 @@ function generateLegalMoves(){
           break;
         }
         else{
-          append(chess_path, {x :aiming_x, y:aiming_y});
+          append(chess_pathway, {x :aiming_x, y:aiming_y});
         }
       }
     }
@@ -173,7 +177,7 @@ function generateLegalMoves(){
       aiming_x = current_selected.x + dir_x;
       aiming_y = current_selected.y + dir_y;
       if (!checkingCollision(aiming_x,aiming_y) && !outofBound(aiming_x,aiming_y)){
-        append(chess_path, {x:aiming_x,y:aiming_y});
+        append(chess_pathway, {x:aiming_x,y:aiming_y});
       }
     }
     if (current_selected.did_move === false){
@@ -190,14 +194,13 @@ function generateLegalMoves(){
           
         } 
       }
-      print(king_exclusive_chess_path);
+
       if (king_exclusive_chess_path[king_exclusive_chess_path.length -1].x > 8 || king_exclusive_chess_path[king_exclusive_chess_path.length -1].x < 0){
-        print("true");
         king_exclusive_chess_path = [];
       }
       if (king_exclusive_chess_path.length !== 0){
         for (let item of king_exclusive_chess_path){
-          append(chess_path, {x:item.x, y:item.y});
+          append(chess_pathway, {x:item.x, y:item.y});
         }
       }
     }
@@ -220,7 +223,7 @@ function generateLegalMoves(){
         ;
       }
       else{
-        append(chess_path, {x:aiming_x, y:aiming_y});
+        append(chess_pathway, {x:aiming_x, y:aiming_y});
       }
       
     }
@@ -235,7 +238,8 @@ function generateLegalMoves(){
   else if (current_selected.name === "rook"){
     loopingDirection(rook_direction);
   }
-  print(chess_path);
+  return chess_pathway;
+
 }
   
 // SEE IF WHERE YOU CLICK HAVE A PIECE THERE OR NOT
@@ -244,7 +248,7 @@ function selectingPiece(){
     for (let chess of dataforParty.white_all_pieces){
       if (chess.x === mouse_press_pos.x && chess.y === mouse_press_pos.y){
         current_selected = chess;
-        generateLegalMoves();
+        chess_path = generateLegalMoves(current_selected);
         break;
       }
       else{
@@ -253,16 +257,13 @@ function selectingPiece(){
     }
   }
   else if (yourRole === "black" &&  dataforParty.turn){
-    print("you time")
     for (let chess of dataforParty.black_all_pieces){
-      print(chess.x, chess.y);
       if (chess.x === mouse_press_pos.x && chess.y === mouse_press_pos.y){
         current_selected = chess;
-        generateLegalMoves();
+        chess_path = generateLegalMoves(current_selected);
         break;
       }
       else{
-        print("cant find any")
         current_selected = null;
       }
     }
@@ -375,7 +376,8 @@ function findRook(){
 // WHEN A CHESS GAME IS HAPPENING
 function chessState(){
   if (current_selected){
-    chesspathChecking();
+    chesspathChecking(current_selected);
+    print(chess_path);
     if (can_go){
       let deleted_piece;
       
@@ -505,5 +507,7 @@ function whoAreYou(name, who){
     }
   }
 }
+
+
 
 

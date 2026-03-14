@@ -30,8 +30,11 @@ let b_knightimg;
 let b_bishopimg;
 let b_rookimg;
 
-// ALL PIECES
-
+// state
+let gameState = "main screen";
+let code = false;
+let connect = false;
+let doOnlyOnce = true;
 
 // BOARD HEIGHT
 let board_height;
@@ -52,6 +55,7 @@ let moving_eating;
 // COOL VARIABLE
 let can_go = false;
 let chess_path = [];
+let kingCheck;
 
 
 
@@ -96,29 +100,47 @@ function preload() {
 
 function setup() {
   
-  dataforParty.activePlayer += 1;
-  player1Orplayer2();
 
   createCanvas(windowWidth, windowHeight);
   updateBoardSize();
-  allpiecePosition();
   
-  print(dataforParty.white_all_pieces);
+
+  
   
 }
 function draw() {
+  if (!dataforParty || typeof dataforParty.white_all_pieces === 'undefined'){
+    return;
+  }
+
+
   updateBoardSize();
-  createCanvas(board_height, board_height);
+  resizeCanvas(board_height, board_height);
   // IF GAME IS NOT ENDED
-  if (dataforParty.gameOn){
+  if (gameState === "main screen"){
+    makeMainScreen();
+  }
+
+  else if (gameState === "finding opponent"){
+    waitRoom();
+  }
+
+  else if (dataforParty.gameOn){
+    if (doOnlyOnce){
+      player1Orplayer2();
+      allpiecePosition();
+      doOnlyOnce = false;
+    }
+    
     drawBoard();
     makeBoard();
+    print(chess_path);
     if (chess_path.length !== 0){
       showPremove();
     }
   }
   // IF THE KING IS EATEN
-  else{
+  else if (!dataforParty.gameOn){
     textAlign(CENTER);
     fill("black");
     textSize(square_size);
@@ -155,7 +177,6 @@ function mousePressed(){
     else if (yourRole === "black"){
       mouse_press_pos = {x : Math.abs(floor(mouseX / (board_height / 8)) - 7), y : Math.abs(floor(mouseY/ (board_height / 8)) - 7)};
     }
-    print(mouse_press_pos)
     chessState();
   }
   
