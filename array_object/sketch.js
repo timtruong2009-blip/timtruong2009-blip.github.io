@@ -134,8 +134,6 @@ function draw() {
       allpiecePosition();
       doOnlyOnce = false;
     }
-    dataforParty.white_all_pieces = dataforParty.white_all_pieces;
-    dataforParty.black_all_pieces = dataforParty.black_all_pieces
     
     drawBoard();
     makeBoard();
