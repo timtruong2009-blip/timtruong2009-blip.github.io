@@ -91,24 +91,26 @@ function preload() {
     player1: "",
     player2: "",
     turn: false,
-    gameOn: true,
-    gameWhereItIs: "chess",
+    gameOn: true, 
+    createBoard: false,
 
   });
   
 }
 
 function setup() {
+  print(dataforParty);
+  if (partyIsHost()){
+    dataforParty.activePlayer = 0;
+    print("did it")
+  }
   
-
   createCanvas(windowWidth, windowHeight);
   updateBoardSize();
-  
-
-  
-  
 }
 function draw() {
+  fill(255, 0, 0);
+  ellipse(50, 50, dataforParty.activePlayer * 20);  
   if (!dataforParty || typeof dataforParty.white_all_pieces === 'undefined'){
     return;
   }
@@ -126,15 +128,17 @@ function draw() {
   }
 
   else if (dataforParty.gameOn){
+    
     if (doOnlyOnce){
       player1Orplayer2();
       allpiecePosition();
       doOnlyOnce = false;
     }
+    dataforParty.white_all_pieces = dataforParty.white_all_pieces;
+    dataforParty.black_all_pieces = dataforParty.black_all_pieces
     
     drawBoard();
     makeBoard();
-    print(chess_path);
     if (chess_path.length !== 0){
       showPremove();
     }
@@ -193,6 +197,5 @@ function player1Orplayer2(){
   else {
     you = "spectator";
   }
-  print(yourRole);
 }
 

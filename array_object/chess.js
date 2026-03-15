@@ -1,65 +1,62 @@
 // MAKING ALL THE PIECES AND STARTING POSITION
 function allpiecePosition(){
-  print(dataforParty.activePlayer);
 // let pawn = (img = pawnimg, x = 0, y = width - width/8);
-  if (dataforParty.activePlayer < 3){
-    if (yourRole === "white"){
-      for (let amount = 7; amount >= 0; amount --){
-        dataforParty.white_all_pieces.push({ x : amount, y :  6, name: "pawn",pawn_go_pace : 2});
-      }
-      
-      // let king = (img = kingimg, x = 0, y = width - width/8);
-      dataforParty.white_all_pieces.push({ x : 4, y : 7 , name: "king", did_move: false});
-    
-      // let queen = (img = queenimg, x = 0, y = width - width/8);
-      dataforParty.white_all_pieces.push({ x : 3, y : 7, name: "queen"});
-    
-      // let knight = (img = knightimg, x = 0, y = width - width/8);
-      for (let amount = 1; amount >= 0; amount --){
-        dataforParty.white_all_pieces.push({ x : amount*5 + 1, y : 7 , name: "knight"});
-      }
-    
-      // let bishop = ;
-      for (let amount = 1; amount >= 0; amount --){
-        dataforParty.white_all_pieces.push({ x : amount * 3 + 2, y : 7, name: "bishop"});
-      }
-    
-      // let rook = ;
-      for (let amount = 1; amount >= 0; amount --){
-        dataforParty.white_all_pieces.push({ x : amount * 7 , y :7, name: "rook", did_move: false});
-      }
+  if (! dataforParty.createBoard ){
+    for (let amount = 7; amount >= 0; amount --){
+      dataforParty.white_all_pieces.push({ x : amount, y :  6, name: "pawn",pawn_go_pace : 2});
     }
     
-    // -------------------------------------------------- make black piece
+    // let king = (img = kingimg, x = 0, y = width - width/8);
+    dataforParty.white_all_pieces.push({ x : 4, y : 7 , name: "king", did_move: false});
   
-    // let pawn = (img = pawnimg, x = 0, y = width - width/8);
-    else if (yourRole === "black") {
-      for (let amount = 7; amount >= 0; amount --){
-        dataforParty.black_all_pieces.push({ x : amount, y :  1, name: "pawn",pawn_go_pace : -2});
-      }
-      
-      // let king = (img = kingimg, x = 0, y = width - width/8);
-      dataforParty.black_all_pieces.push({ x : 4, y : 0 , name: "king", did_move: false});
-    
-      // let queen = (img = queenimg, x = 0, y = width - width/8);
-      dataforParty.black_all_pieces.push({ x : 3, y : 0, name: "queen"});
-    
-      // let knight = (img = knightimg, x = 0, y = width - width/8);
-      for (let amount = 1; amount >= 0; amount --){
-        dataforParty.black_all_pieces.push({ x : amount*5 + 1, y : 0 , name: "knight"});
-      }
-    
-      // let bishop = ;
-      for (let amount = 1; amount >= 0; amount --){
-        dataforParty.black_all_pieces.push({ x : amount * 3 + 2, y : 0, name: "bishop"});
-      }
-    
-      // let rook = ;
-      for (let amount = 1; amount >= 0; amount --){
-        dataforParty.black_all_pieces.push({ x : amount * 7 , y :0, name: "rook", did_move: false});
-      }
+    // let queen = (img = queenimg, x = 0, y = width - width/8);
+    dataforParty.white_all_pieces.push({ x : 3, y : 7, name: "queen"});
+  
+    // let knight = (img = knightimg, x = 0, y = width - width/8);
+    for (let amount = 1; amount >= 0; amount --){
+      dataforParty.white_all_pieces.push({ x : amount*5 + 1, y : 7 , name: "knight"});
     }
+  
+    // let bishop = ;
+    for (let amount = 1; amount >= 0; amount --){
+      dataforParty.white_all_pieces.push({ x : amount * 3 + 2, y : 7, name: "bishop"});
+    }
+  
+    // let rook = ;
+    for (let amount = 1; amount >= 0; amount --){
+      dataforParty.white_all_pieces.push({ x : amount * 7 , y :7, name: "rook", did_move: false});
+    }
+  
+  
+    for (let amount = 7; amount >= 0; amount --){
+      dataforParty.black_all_pieces.push({ x : amount, y :  1, name: "pawn",pawn_go_pace : -2});
+    }
+    
+    // let king = (img = kingimg, x = 0, y = width - width/8);
+    dataforParty.black_all_pieces.push({ x : 4, y : 0 , name: "king", did_move: false});
+  
+    // let queen = (img = queenimg, x = 0, y = width - width/8);
+    dataforParty.black_all_pieces.push({ x : 3, y : 0, name: "queen"});
+  
+    // let knight = (img = knightimg, x = 0, y = width - width/8);
+    for (let amount = 1; amount >= 0; amount --){
+      dataforParty.black_all_pieces.push({ x : amount*5 + 1, y : 0 , name: "knight"});
+    }
+  
+    // let bishop = ;
+    for (let amount = 1; amount >= 0; amount --){
+      dataforParty.black_all_pieces.push({ x : amount * 3 + 2, y : 0, name: "bishop"});
+    }
+  
+    // let rook = ;
+    for (let amount = 1; amount >= 0; amount --){
+      dataforParty.black_all_pieces.push({ x : amount * 7 , y :0, name: "rook", did_move: false});
+    }
+    dataforParty.createBoard = true;
+  // -------------------------------------------------- make black piece
   }
+  // let pawn = (img = pawnimg, x = 0, y = width - width/8);
+  
 }
   // DRAWING THE CHESS BOARD
 function makeBoard(){
@@ -89,6 +86,11 @@ function makeBoard(){
       whatPieceIsIt = whoAreYou(item.name, "black");
       image(whatPieceIsIt, Math.abs(item.x - 7) * (board_height / 8) ,board_height - square_size * item.y - square_size,square_size,square_size);
     }
+  }
+  else{
+    fill("black");
+    textSize(20);
+    text("A match is happening right now", board_height/2, board_height/2);
   }
   
 }
@@ -374,7 +376,6 @@ function findRook(){
 function chessState(){
   if (current_selected){
     chesspathChecking(current_selected);
-    print(chess_path);
     if (can_go){
       let deleted_piece;
       
