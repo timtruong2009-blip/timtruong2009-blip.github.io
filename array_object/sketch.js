@@ -55,7 +55,8 @@ let moving_eating;
 // COOL VARIABLE
 let can_go = false;
 let chess_path = [];
-let kingCheck;
+let kingCheck = [];
+let notAvailable = [];
 
 
 
@@ -79,6 +80,7 @@ function preload() {
   partyConnect(
     "wss://demoserver.p5party.org",
     "chess online",
+    "1st sever"
   );
   you = partyLoadMyShared();
   guests = partyLoadGuestShareds();
@@ -93,16 +95,13 @@ function preload() {
     turn: false,
     gameOn: true, 
     createBoard: false,
-
   });
   
 }
 
 function setup() {
-  print(dataforParty);
   if (partyIsHost()){
     dataforParty.activePlayer = 0;
-    print("did it")
   }
   
   createCanvas(windowWidth, windowHeight);
@@ -122,19 +121,18 @@ function draw() {
   if (gameState === "main screen"){
     makeMainScreen();
   }
-
+  // WAITING FOR AN OPPONENT
   else if (gameState === "finding opponent"){
     waitRoom();
   }
-
+  // GAME BEGINS
   else if (dataforParty.gameOn){
-    
     if (doOnlyOnce){
       player1Orplayer2();
       allpiecePosition();
       doOnlyOnce = false;
     }
-    
+    isTheKingChecked();
     drawBoard();
     makeBoard();
     if (chess_path.length !== 0){
@@ -169,13 +167,13 @@ function updateBoardSize(){
 }
 // WHEN MOUSE IS PRESSED ON BOARD
 function mousePressed(){
-  if (dataforParty.gameWhereItIs === "mainscreen" ){
-
+  if (gameState === "mainscreen" ){
+    // Maybe I will add a button idk
   }
-  
-  else if (dataforParty.gameWhereItIs === "chess" ){
-    if (yourRole === "white")
+  else if (gameState === "chess" ){
+    if (yourRole === "white"){
       mouse_press_pos = {x : floor(mouseX / (board_height / 8)), y : floor(mouseY/ (board_height / 8))};
+    }
     else if (yourRole === "black"){
       mouse_press_pos = {x : Math.abs(floor(mouseX / (board_height / 8)) - 7), y : Math.abs(floor(mouseY/ (board_height / 8)) - 7)};
     }
@@ -185,7 +183,6 @@ function mousePressed(){
 }
 
 function player1Orplayer2(){
-  
   if (partyIsHost()){
     yourRole = "white";
   }
