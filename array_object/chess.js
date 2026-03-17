@@ -110,12 +110,12 @@ function drawBoard(){
     }
 }
   // Check to see if 
-function generateLegalMoves(current_selected){
+function generateLegalMoves(current_selecting){
   let chess_pathway = [];
   
-  if (current_selected.name === "pawn"){
+  if (current_selecting.name === "pawn"){
     if (yourRole === "white"){
-      let pawn_weird_attack_thing = [[current_selected.x +1,current_selected.y -1],[current_selected.x -1,current_selected.y -1]];
+      let pawn_weird_attack_thing = [[current_selecting.x +1,current_selecting.y -1],[current_selecting.x -1,current_selecting.y -1]];
       for (let [x_move,y_move] of pawn_weird_attack_thing){
         for (let black of dataforParty.black_all_pieces){
           if (black.x === x_move & black.y === y_move){
@@ -123,13 +123,13 @@ function generateLegalMoves(current_selected){
           }
         }
       }
-      if (current_selected.y !== 6){
-        current_selected.pawn_go_pace = 1;
+      if (current_selecting.y !== 6){
+        current_selecting.pawn_go_pace = 1;
       }
-      for (let length = 1; length <= current_selected.pawn_go_pace ; length ++){
-        aiming_x = current_selected.x;
-        aiming_y = current_selected.y - length;
-        let hm = checkingCollision(aiming_x,aiming_y, current_selected);
+      for (let length = 1; length <= current_selecting.pawn_go_pace ; length ++){
+        aiming_x = current_selecting.x;
+        aiming_y = current_selecting.y - length;
+        let hm = checkingCollision(aiming_x,aiming_y, current_selecting);
         if (hm !== false){
           for (let item of hm){
             chess_pathway.push(item);
@@ -146,7 +146,7 @@ function generateLegalMoves(current_selected){
     }
     else if (yourRole === "black"){
 
-      let pawn_weird_attack_thing = [[current_selected.x +1,current_selected.y +1],[current_selected.x -1,current_selected.y +1]];
+      let pawn_weird_attack_thing = [[current_selecting.x +1,current_selecting.y +1],[current_selecting.x -1,current_selecting.y +1]];
       for (let [x_move,y_move] of pawn_weird_attack_thing){
         for (let white of dataforParty.white_all_pieces){
           if (white.x === x_move & white.y === y_move){
@@ -154,14 +154,14 @@ function generateLegalMoves(current_selected){
           }
         }
       }
-      if (current_selected.y !== 1){
-        current_selected.pawn_go_pace = -1;
+      if (current_selecting.y !== 1){
+        current_selecting.pawn_go_pace = -1;
       }
-      for (let length = -1; length >= current_selected.pawn_go_pace ; length --){
-        aiming_x = current_selected.x;
-        aiming_y = current_selected.y - length;
+      for (let length = -1; length >= current_selecting.pawn_go_pace ; length --){
+        aiming_x = current_selecting.x;
+        aiming_y = current_selecting.y - length;
 
-        if (checkingCollision(aiming_x,aiming_y, current_selected)){
+        if (checkingCollision(aiming_x,aiming_y, current_selecting)){
           break;
         }
         else if(outofBound(aiming_x,aiming_y)){
@@ -174,22 +174,22 @@ function generateLegalMoves(current_selected){
     }
   }
   
-  else if (current_selected.name === "king"){
+  else if (current_selecting.name === "king"){
 
     let king_exclusive_chess_path = [];
     for (let [dir_x,dir_y] of king_direction){
-      aiming_x = current_selected.x + dir_x;
-      aiming_y = current_selected.y + dir_y;
-      if (!checkingCollision(aiming_x,aiming_y, current_selected) && !outofBound(aiming_x,aiming_y)){
+      aiming_x = current_selecting.x + dir_x;
+      aiming_y = current_selecting.y + dir_y;
+      if (!checkingCollision(aiming_x,aiming_y, current_selecting) && !outofBound(aiming_x,aiming_y)){
         append(chess_pathway, {x:aiming_x,y:aiming_y});
       }
     }
-    if (current_selected.did_move === false){
+    if (current_selecting.did_move === false){
       for (let [dir_x,dir_y] of castle_direction){
         for (let length = 1; length <= 8; length ++){
-          aiming_x = current_selected.x + length * dir_x;
-          aiming_y = current_selected.y;
-          if (checkingCollision(aiming_x,aiming_y, current_selected)){
+          aiming_x = current_selecting.x + length * dir_x;
+          aiming_y = current_selecting.y;
+          if (checkingCollision(aiming_x,aiming_y, current_selecting)){
             break;                
           }
           else{
@@ -198,7 +198,7 @@ function generateLegalMoves(current_selected){
           
         } 
       }
-      if ((king_exclusive_chess_path.length === 0)){
+      if (king_exclusive_chess_path.length === 0){
 
       }
       else if (king_exclusive_chess_path[king_exclusive_chess_path.length -1].x > 8 || king_exclusive_chess_path[king_exclusive_chess_path.length -1].x < 0){
@@ -211,17 +211,19 @@ function generateLegalMoves(current_selected){
       }
     }
   }
-  else if (current_selected.name === "queen"){
+  else if (current_selecting.name === "queen"){
+    for (let item of loopingDirection(queen_direction, current_selecting)){
+      chess_pathway.push(item);
+    }
     
-    loopingDirection(queen_direction, current_selected);
   }
 
-  else if (current_selected.name === "knight"){
+  else if (current_selecting.name === "knight"){
     for (let [dir_x,dir_y] of knight_direction){
-      aiming_x = current_selected.x + dir_x;
-      aiming_y = current_selected.y + dir_y;
+      aiming_x = current_selecting.x + dir_x;
+      aiming_y = current_selecting.y + dir_y;
 
-      if (checkingCollision(aiming_x,aiming_y, current_selected)){
+      if (checkingCollision(aiming_x,aiming_y, current_selecting)){
         ;
         
       }
@@ -235,17 +237,19 @@ function generateLegalMoves(current_selected){
     }
   }
 
-  else if (current_selected.name === "bishop"){
-    loopingDirection(bishop_direction, current_selected);
+  else if (current_selecting.name === "bishop"){
+    for (let item of loopingDirection(bishop_direction, current_selecting)){
+      chess_pathway.push(item);
+    }
+    
     
   }
 
-  else if (current_selected.name === "rook"){
-    for (let item of loopingDirection(rook_direction, current_selected)){
+  else if (current_selecting.name === "rook"){
+    for (let item of loopingDirection(rook_direction, current_selecting)){
       chess_pathway.push(item);
     }
   }
-  print(chess_pathway);
   return chess_pathway;
 
 }
@@ -280,30 +284,33 @@ function selectingPiece(){
 }
 
   // CHECKING THE LOCATION X AND Y TO SEE IF THERE IS ANY OPPOSITE COLOR PIECE THERE
-function checkingCollision(x,y, current_selected){
+function checkingCollision(x,y, current_selecting){
   let chessthing = [];
-    for (let item of dataforParty.white_all_pieces){
-      if (item.x === x && item.y === y){
-        if (current_selected.name !== "pawn"){
-          if (dataforParty.turn){
-            chessthing.push({x:x, y:y});
-          }
+  for (let item of dataforParty.black_all_pieces){
+    if (item.x === x && item.y === y){
+      if (current_selecting.name !== "pawn"){
+        if (!dataforParty.turn){
+          chessthing.push({x:x, y:y});
         }
-        return chessthing;
+        
       }
+      
+      return chessthing;
     }
-    for (let item of dataforParty.black_all_pieces){
-      if (item.x === x && item.y === y){
-        if (current_selected.name !== "pawn"){
-          if (!dataforParty.turn){
-            chessthing.push({x:x, y:y});
-          }
-          
+  }
+  
+  for (let item of dataforParty.black_all_pieces){
+    if (item.x === x && item.y === y){
+      if (current_selecting.name !== "pawn"){
+        if (!dataforParty.turn){
+          chessthing.push({x:x, y:y});
         }
-        return chessthing;
+        
       }
+      return chessthing;
     }
-    return false;
+  }
+  return false;
 }
   
 // CHECK IF THE POSSIBLE MOVES THAT A PIECE CAN MAKE IS WHERE YOU CLICK IT
@@ -351,13 +358,13 @@ function outofBound(x,y){
 }
   
 // GOT THE DIRECTION IN A LIST AND LOOP THROUGH IT GOING CHECK SQUARE
-function loopingDirection(direction, current_selected){
+function loopingDirection(direction, current_selecting){
   let chessthing = [];
   for (let [dir_x,dir_y] of direction){
     for (let length = 1; length <= 8; length ++){
-      aiming_x = current_selected.x + dir_x * length;
-      aiming_y = current_selected.y + dir_y * length;
-      if (checkingCollision(aiming_x,aiming_y, current_selected)){
+      aiming_x = current_selecting.x + dir_x * length;
+      aiming_y = current_selecting.y + dir_y * length;
+      if (checkingCollision(aiming_x,aiming_y, current_selecting)){
         break;
       }
       else if(outofBound(aiming_x,aiming_y)){
@@ -466,6 +473,7 @@ function chessState(){
     }
       
     chess_path = [];
+    isTheKingChecked();
   }
   // IF NOT THEN SELECT A PIECE
   else{
@@ -518,11 +526,31 @@ function whoAreYou(name, who){
 
 function isTheKingChecked(){
   notAvailable = [];
-  for (let item of dataforParty.white_all_pieces){
-    for (let path of generateLegalMoves(item)){
-      notAvailable.push(path);
+  if (dataforParty.turn){
+    kingIndex = dataforParty.black_all_pieces[dataforParty.black_all_pieces.findIndex(item => item.name === "king")];
+    for (let item of dataforParty.white_all_pieces){
+      let allPiecespossiblemove = generateLegalMoves(item);
+      for (let path of allPiecespossiblemove){
+        notAvailable.push(path);
+      }
     }
   }
+  else{
+    kingIndex = dataforParty.white_all_pieces[dataforParty.white_all_pieces.findIndex(item => item.name === "king")];
+    for (let item of dataforParty.black_all_pieces){
+      let allPiecespossiblemove = generateLegalMoves(item);
+      for (let path of allPiecespossiblemove){
+        notAvailable.push(path);
+      }
+    }
+  }
+  for (let item of notAvailable){
+    if (item.x === kingIndex.x && item.y === kingIndex.y){
+      checked = [item.x, item.y];
+    }
+  }
+  print(dataforParty.turn);
+  print(checked);
 }
 
 

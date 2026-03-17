@@ -38,6 +38,8 @@ let doOnlyOnce = true;
 
 // BOARD HEIGHT
 let board_height;
+let kingIndex;
+let checked;
 
 // ALL DIRECTION
 let knight_direction = [[-1,2],[1,2],[2,1],[2,-1],[1,-2],[-1,-2],[-2,-1],[-2,1]];
@@ -132,7 +134,7 @@ function draw() {
       allpiecePosition();
       doOnlyOnce = false;
     }
-    isTheKingChecked();
+    
     drawBoard();
     makeBoard();
     if (chess_path.length !== 0){

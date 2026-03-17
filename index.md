@@ -6,6 +6,7 @@
 - [image_demo](03-image)
 - [Ball Array](balls)
 - [art](cool_art)
+- [perlin](perlin)
 
 ## Assignments
 - [interactive scene](interactive_assi)
