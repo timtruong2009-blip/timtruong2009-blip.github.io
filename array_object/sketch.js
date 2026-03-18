@@ -39,7 +39,7 @@ let doOnlyOnce = true;
 // BOARD HEIGHT
 let board_height;
 let kingIndex;
-let checked;
+
 
 // ALL DIRECTION
 let knight_direction = [[-1,2],[1,2],[2,1],[2,-1],[1,-2],[-1,-2],[-2,-1],[-2,1]];
@@ -60,7 +60,7 @@ let chess_path = [];
 let kingCheck = [];
 let notAvailable = [];
 
-
+let turnStart = false;
 
 
 function preload() {
@@ -97,6 +97,7 @@ function preload() {
     turn: false,
     gameOn: true, 
     createBoard: false,
+    checked : 0,
   });
   
 }
@@ -135,8 +136,25 @@ function draw() {
       doOnlyOnce = false;
     }
     
+    
+    for (let item of notAvailable){
+      fill("red");
+      circle(item.x * square_size + square_size /2, item.y * square_size + square_size /2,square_size/4);
+    }
+    
     drawBoard();
+    if (dataforParty.checked !== 0){
+      fill("red");
+      if (yourRole === "white"){
+        rect(dataforParty.checked.x * square_size, dataforParty.checked.y * square_size, square_size, square_size);
+      }
+      else{
+         
+        rect( Math.abs(dataforParty.checked.x - 7) * (board_height / 8) , board_height - square_size * dataforParty.checked.y - square_size,square_size,square_size);
+      }
+    }
     makeBoard();
+    
     if (chess_path.length !== 0){
       showPremove();
     }
