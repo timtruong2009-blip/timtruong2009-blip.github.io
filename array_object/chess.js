@@ -412,6 +412,25 @@ function chessState(){
     chesspathChecking();
     if (can_go){
       let deleted_piece;
+      if (dataforParty.checked !== 0){
+        let pos;
+        let tempoWhite = [...dataforParty.white_all_pieces];
+        let tempoBlack = [...dataforParty.black_all_pieces];
+        if (!dataforParty.turn){
+          pos = tempoWhite.indexOf(current_selected);
+          tempoWhite[pos].x = mouse_press_pos.x;
+          tempoWhite[pos].y = mouse_press_pos.y;
+        }
+        else{
+          pos = tempoBlack.indexOf(current_selected);
+          tempoBlack[pos].x = mouse_press_pos.x;
+          tempoBlack[pos].y = mouse_press_pos.y;
+        }
+        if (isTheKingChecked(!dataforParty.turn, tempoWhite, tempoBlack)){
+          print("nononono");
+        }
+        
+      }
       
       if (!dataforParty.turn){
         if (current_selected.name === "king"){
@@ -484,7 +503,7 @@ function chessState(){
         current_selected.did_move = true;
       }
       current_selected = null;
-      if (isTheKingChecked(dataforParty.turn)){
+      if (isTheKingChecked(dataforParty.turn, dataforParty.white_all_pieces, dataforParty.black_all_pieces)){
         dataforParty.checked = kingIndex;
         print(dataforParty.checked);
       }
@@ -552,14 +571,14 @@ function whoAreYou(name, who){
   }
 }
 
-function isTheKingChecked(when){
+function isTheKingChecked(when, allwhite, allblack){
   notAvailable = [];
   print(when);
   
   if (!when){
-    kingIndex = dataforParty.black_all_pieces[dataforParty.black_all_pieces.findIndex(item => item.name === "king")];
+    kingIndex = allblack[allblack.findIndex(item => item.name === "king")];
     
-    for (let item of dataforParty.white_all_pieces){
+    for (let item of allwhite){
       let allPiecespossiblemove = generateLegalMoves(item);
       for (let path of allPiecespossiblemove){
         if (path.x === kingIndex.x && path.y === kingIndex.y){
@@ -570,9 +589,9 @@ function isTheKingChecked(when){
   }
   else{
     print("check");
-    kingIndex = dataforParty.white_all_pieces[dataforParty.white_all_pieces.findIndex(item => item.name === "king")];
+    kingIndex = allwhite[allwhite.findIndex(item => item.name === "king")];
     
-    for (let item of dataforParty.black_all_pieces){
+    for (let item of allblack){
       let allPiecespossiblemove = generateLegalMoves(item);
       for (let path of allPiecespossiblemove){
         if (path.x === kingIndex.x && path.y === kingIndex.y){
