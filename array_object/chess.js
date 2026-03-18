@@ -127,7 +127,7 @@ function generateLegalMoves(current_selecting){
       }
 
 
-      let maxSteps = (current_selecting.y === 6) ? 2 : 1;
+      let maxSteps = current_selecting.y === 6 ? 2 : 1;
 
       for (let length = 1; length <= maxSteps; length++) {
         let aiming_x = current_selecting.x;
@@ -138,8 +138,9 @@ function generateLegalMoves(current_selecting){
 
         if (hit !== false || outofBound(aiming_x, aiming_y)) {
             break;
-        } else {
-            append(chess_pathway, { x: aiming_x, y: aiming_y });
+        } 
+        else {
+          append(chess_pathway, { x: aiming_x, y: aiming_y });
         }
       }
     }
@@ -161,7 +162,7 @@ function generateLegalMoves(current_selecting){
         aiming_y = current_selecting.y - length;
 
         let hm = checkingCollision(aiming_x, aiming_y, current_selecting);
-        if ((hm !== false && hm.length > 0) || outofBound(aiming_x, aiming_y)) {
+        if (hm !== false && hm.length > 0 || outofBound(aiming_x, aiming_y)) {
             break; 
         } 
         else {
@@ -582,7 +583,7 @@ function isTheKingChecked(when, allwhite, allblack){
       let allPiecespossiblemove = generateLegalMoves(item);
       for (let path of allPiecespossiblemove){
         if (path.x === kingIndex.x && path.y === kingIndex.y){
-          return true
+          return true;
         }
       }
     }
@@ -596,12 +597,12 @@ function isTheKingChecked(when, allwhite, allblack){
       for (let path of allPiecespossiblemove){
         if (path.x === kingIndex.x && path.y === kingIndex.y){
           print("its true");
-          return true
+          return true;
         }
       }
     }
-  }
+  } 
   
-  return false
+  return false;
 }
 
