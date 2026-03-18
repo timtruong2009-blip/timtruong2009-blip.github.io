@@ -415,6 +415,7 @@ function chessState(){
       
       if (!dataforParty.turn){
         if (current_selected.name === "king"){
+
           for (let item of dataforParty.white_all_pieces){
             if (item.name === "rook" && current_selected.did_move === false && item.did_move === false && item.x === mouse_press_pos.x  + 1 && item.x === 7 ){
               let rook_pos = dataforParty.white_all_pieces.indexOf(item);
@@ -483,7 +484,7 @@ function chessState(){
         current_selected.did_move = true;
       }
       current_selected = null;
-      if (isTheKingChecked()){
+      if (isTheKingChecked(dataforParty.turn)){
         dataforParty.checked = kingIndex;
         print(dataforParty.checked);
       }
@@ -551,10 +552,11 @@ function whoAreYou(name, who){
   }
 }
 
-function isTheKingChecked(){
+function isTheKingChecked(when){
   notAvailable = [];
+  print(when);
   
-  if (!dataforParty.turn){
+  if (!when){
     kingIndex = dataforParty.black_all_pieces[dataforParty.black_all_pieces.findIndex(item => item.name === "king")];
     
     for (let item of dataforParty.white_all_pieces){
@@ -567,12 +569,14 @@ function isTheKingChecked(){
     }
   }
   else{
+    print("check");
     kingIndex = dataforParty.white_all_pieces[dataforParty.white_all_pieces.findIndex(item => item.name === "king")];
     
     for (let item of dataforParty.black_all_pieces){
       let allPiecespossiblemove = generateLegalMoves(item);
       for (let path of allPiecespossiblemove){
         if (path.x === kingIndex.x && path.y === kingIndex.y){
+          print("its true");
           return true
         }
       }
