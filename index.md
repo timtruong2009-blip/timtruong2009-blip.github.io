@@ -7,6 +7,7 @@
 - [Ball Array](balls)
 - [art](cool_art)
 - [perlin](perlin)
+- [2dgrid](2dgrid)
 
 ## Assignments
 - [interactive scene](interactive_assi)
