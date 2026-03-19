@@ -529,6 +529,7 @@ function chessState(){
   }
 }
 
+// return the image base on the name
 function whoAreYou(name, who){
   if (who === "white"){
     if (name === "pawn"){
@@ -572,6 +573,7 @@ function whoAreYou(name, who){
   }
 }
 
+// check if the king is checked or not
 function isTheKingChecked(when, allwhite, allblack){
   notAvailable = [];
   print(when);
