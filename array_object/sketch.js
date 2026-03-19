@@ -103,6 +103,7 @@ function preload() {
 }
 
 function setup() {
+  // the sever is kinda buggy sometimes so i did it so that it resets
   if (partyIsHost()){
     dataforParty.activePlayer = 0;
   }
@@ -110,9 +111,9 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   updateBoardSize();
 }
+
 function draw() {
-  fill(255, 0, 0);
-  ellipse(50, 50, dataforParty.activePlayer * 20);  
+  // if the data is not ready then dont run code
   if (!dataforParty || typeof dataforParty.white_all_pieces === 'undefined'){
     return;
   }
@@ -120,7 +121,7 @@ function draw() {
 
   updateBoardSize();
   resizeCanvas(board_height, board_height);
-  // IF GAME IS NOT ENDED
+  // BEGINNING GAME SCREEN
   if (gameState === "main screen"){
     makeMainScreen();
   }
@@ -135,14 +136,10 @@ function draw() {
       allpiecePosition();
       doOnlyOnce = false;
     }
-    
-    
-    for (let item of notAvailable){
-      fill("red");
-      circle(item.x * square_size + square_size /2, item.y * square_size + square_size /2,square_size/4);
-    }
-    
+    // DRAWING THE CHESS BOARD
     drawBoard();
+
+    // DRAWING THE RED SQUARE IF CHECKED
     if (dataforParty.checked !== 0){
       fill("red");
       if (yourRole === "white"){
@@ -153,8 +150,10 @@ function draw() {
         rect( Math.abs(dataforParty.checked.x - 7) * (board_height / 8) , board_height - square_size * dataforParty.checked.y - square_size,square_size,square_size);
       }
     }
+    // DISPLAYING THE CHESS PIECES
     makeBoard();
     
+    // SHOWING THE PREMOVE OF EACH PIECES
     if (chess_path.length !== 0){
       showPremove();
     }
@@ -173,8 +172,7 @@ function draw() {
   }
 }
 
-
-
+// UPDATING SIZE IF SCREEN CHANGE
 function updateBoardSize(){
   if (windowHeight < windowWidth){
     square_size = windowHeight / 8;
@@ -185,6 +183,7 @@ function updateBoardSize(){
     board_height = windowWidth;
   }
 }
+
 // WHEN MOUSE IS PRESSED ON BOARD
 function mousePressed(){
   if (gameState === "mainscreen" ){
@@ -202,6 +201,7 @@ function mousePressed(){
   
 }
 
+// IF YOU HOST THE GAME THEN YOU ARE WHITE
 function player1Orplayer2(){
   if (partyIsHost()){
     yourRole = "white";
