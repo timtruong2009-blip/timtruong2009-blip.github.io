@@ -8,6 +8,7 @@
 - [art](cool_art)
 - [perlin](perlin)
 - [2dgrid](2dgrid)
+- [rectangular grid](rectangular grid)
 
 ## Assignments
 - [interactive scene](interactive_assi)
