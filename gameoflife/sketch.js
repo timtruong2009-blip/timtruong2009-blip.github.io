@@ -1,9 +1,12 @@
 // 2d rectangular grid demo
 
-const CELL_SIZE = 100;
+
+const CELL_SIZE = 20;
 let rows;
 let cols;
 let grid;
+let autoplay = false;
+const RENDERFRAME = 10;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -14,6 +17,10 @@ function setup() {
 
 function draw() {
   background(220);
+  if (autoplay && frameCount % RENDERFRAME === 0){
+    grid = taketurn();
+  }
+  
   displayGrid();
 }
 
@@ -34,6 +41,9 @@ function keyPressed() {
   }
   else if (key === "e") {
     grid = generateEmptyGrid(cols, rows);
+  }
+  else if (key === " "){
+    autoplay = !autoplay;
   }
 }
 
@@ -88,4 +98,42 @@ function generateEmptyGrid(cols, rows) {
     }
   }
   return newGrid;
+}
+
+function taketurn(){
+  let nextturn = generateEmptyGrid(cols, rows);
+  for (let x = 0; x < cols; x ++){
+    for (let y = 0; y < rows; y++){
+      let neighbour = 0;
+      for (let i = -1; i <= 1; i++){
+        for (let j = -1; j <= 1; j++){
+          if (x + i >= 0 && x+i < cols && y + j >= 0 && y + j < rows){
+            neighbour += grid[y + j][x + i];
+          }
+        }
+      }
+      // kms
+      neighbour -= grid[y][x];
+      // apply rules
+      if (grid[y][x] === 1){
+        if (neighbour === 2 || neighbour === 3){
+          nextturn[y][x] = 1;
+        }
+        else{
+          nextturn[y][x] = 0;
+        }
+      }
+      if (grid[y][x] === 0){
+        if (neighbour === 3){
+          nextturn[y][x] = 1;
+        }
+        else{
+          nextturn[y][x] = 0;
+        }
+      }
+      
+
+    }
+  }
+  return nextturn;
 }

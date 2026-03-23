@@ -8,8 +8,10 @@
 - [art](cool_art)
 - [perlin](perlin)
 - [rectangular grid](rectangular grid)
+- [cool battleground game](2dgrid)
+- [game of life](gameoflife)
 
 ## Assignments
 - [interactive scene](interactive_assi)
 - [arrays and object notation](array_object)
-- [2dgrid](2dgrid)
+- [2D][grid2d]
