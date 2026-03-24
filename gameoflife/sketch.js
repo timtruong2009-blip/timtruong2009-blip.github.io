@@ -2,11 +2,19 @@
 
 
 const CELL_SIZE = 20;
+const RENDERFRAME = 10;
+const DEADCELL = 0;
+const LIVECELL = 1;
+
 let rows;
 let cols;
 let grid;
 let autoplay = false;
-const RENDERFRAME = 10;
+let gosper;
+
+function preload(){
+  gosper = loadJSON("gosper.json");
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -45,15 +53,19 @@ function keyPressed() {
   else if (key === " "){
     autoplay = !autoplay;
   }
+  else if (key === "g"){
+    grid = gosper;
+  }
+
 }
 
 function toggleCell(x, y) {
   //make sure the cell you're toggling is in the grid
   if (x >= 0 && x < cols && y >= 0 && y < rows) {
-    if (grid[y][x] === 0) {
+    if (grid[y][x] === DEADCELL) {
       grid[y][x] = 1;
     }
-    else if (grid[y][x] === 1) {
+    else if (grid[y][x] === LIVECELL) {
       grid[y][x] = 0;
     }
   }
@@ -62,10 +74,10 @@ function toggleCell(x, y) {
 function displayGrid() {
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
-      if (grid[y][x] === 0) {
+      if (grid[y][x] === DEADCELL) {
         fill("white");
       }
-      else if (grid[y][x] === 1) {
+      else if (grid[y][x] === LIVECELL) {
         fill("black");
       }
       square(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE);
@@ -115,20 +127,20 @@ function taketurn(){
       // kms
       neighbour -= grid[y][x];
       // apply rules
-      if (grid[y][x] === 1){
+      if (grid[y][x] === LIVECELL){
         if (neighbour === 2 || neighbour === 3){
-          nextturn[y][x] = 1;
+          nextturn[y][x] = LIVECELL;
         }
         else{
-          nextturn[y][x] = 0;
+          nextturn[y][x] = DEADCELL;
         }
       }
-      if (grid[y][x] === 0){
+      if (grid[y][x] === DEADCELL){
         if (neighbour === 3){
-          nextturn[y][x] = 1;
+          nextturn[y][x] = LIVECELL;
         }
         else{
-          nextturn[y][x] = 0;
+          nextturn[y][x] = DEADCELL;
         }
       }
       

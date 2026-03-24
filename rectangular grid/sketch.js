@@ -1,9 +1,15 @@
 // 2d rectangular grid demo
 
+
 const CELL_SIZE = 100;
 let rows;
 let cols;
 let grid;
+let gosper;
+
+function preload(){
+  gosper = loadJSON("gosper.json");
+}
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -34,6 +40,9 @@ function keyPressed() {
   }
   else if (key === "e") {
     grid = generateEmptyGrid(cols, rows);
+  }
+  else if (key === "g"){
+    grid = gosper;
   }
 }
 

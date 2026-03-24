@@ -20,7 +20,7 @@ const GRIDSIZE = 32;
 let groundImage;
 
 let theWorld = [];
-let gameState = "choosing class"
+let gameState = "choosing class";
 
 
 
@@ -70,7 +70,7 @@ function preload(){
 }
 
 function setup() {
-  imageMode(CENTER)
+  imageMode(CENTER);
   makeWorld();
   console.log(theWorld);
 
@@ -85,7 +85,7 @@ function draw() {
   if (gameState === "choosing class"){
     MakingClassButton();
     for (let i = 0; i < 4; i++){
-      print("ya")
+      print("ya");
       line(width/4 *i, 0, width/4 *i, height);
     }
   }
@@ -98,23 +98,23 @@ function draw() {
 function makeWorld(){
   for (let y = 0; y <= WORLDSIZE; y ++){
     let row_x = [];
-    for (let x = 0; x <= WORLDSIZE; x ++){
-      row_x.push(Math.round(random(1,3)))
-    }
-    theWorld.push(row_x);
-  }
-}
-
-class player{
-  constructor(posx, posy, classChoose, ){
-    this.x = posx;
-    this.y = posy;
-
-  }
-}
-
-class mage extends player(){
-
+    for (let x = 0; x <= WORLDSIZE; x ++){                  
+      row_x.push(Math.round(random(1,3))) ;                
+    }                  
+    theWorld.push(row_x);                  
+  }                  
+}                  
+                  
+class player{                  
+  constructor(posx, posy, classChoose, ){                  
+    this.x = posx;                  
+    this.y = posy;                  
+                  
+  }                  
+}                  
+                  
+class mage extends player(){                  
+                  
 }
 
 function mousePressed(){
@@ -136,28 +136,28 @@ function MakingClassButton(){
 
   displaySheetStarting(warriorIdle,warriorPixel,numofframe = 5, wherex = width/8 + 150 , wherey = height/4 - 20, warriormulti);
 
-  displaySheetStarting(schoolgirlIdle, schoolgirlPixel,numofframe = 6, wherex = width/8 *3 ,wherey = height/2 - 60, schoolgirlmulti)
+  // displaySheetStarting(schoolgirlIdle, schoolgirlPixel,numofframe = 6, wherex = width/8 *3 ,wherey = height/2 - 60, schoolgirlmulti);
 
-  displaySheetStarting(mageIdle, magePixel, numofframe = 5, wherex = width/8 *5, wherey = 0 + height/2 , magebondmulti)
+  // displaySheetStarting(mageIdle, magePixel, numofframe = 5, wherex = width/8 *5, wherey = 0 + height/2 , magebondmulti);
 
-  displaySheetStarting(vagabondIdle, vagabondPixel, numofframe = vagabondIdle.numFrames(), wherex = width/8 *7 ,wherey = height/2 -150, vagabondmulti)
+  // displaySheetStarting(vagabondIdle, vagabondPixel, numofframe = vagabondIdle.numFrames(), wherex = width/8 *7 ,wherey = height/2 -150, vagabondmulti);
 }
 
 function MakingClassButtonPressed(){
   if (clickpos.x > 0 && clickpos.x < width /4){
-    return "warrior"
+    return "warrior";
   }
   else if (clickpos.x > width /4 && clickpos.x < width /4 *2){
-    return "schoolgirl"
+    return "schoolgirl";
   }
   else if (clickpos.x > width /4 *2 && clickpos.x < width /4 * 3){
-    return "mage"
+    return "mage";
   }
   else if (clickpos.x > width /4 * 3 && clickpos.x < width){
-    return "vagabond"
+    return "vagabond";
   }
   else{
-    return false
+    return false;
   }
 }
 
@@ -171,18 +171,17 @@ function gettingScaleFactor(targetW, targetH, size){
 function displaySheetStarting(classes,classespixel, numofframe, wherex, wherey, multiplier){
   let whichframe = floor(frameCount / 10) % numofframe;
   if (classes === vagabondIdle){
-    vagabondIdle.setFrame(whichframe)
+    vagabondIdle.setFrame(whichframe);
     image(classes, wherex, wherey,
       classespixel.w * multiplier,
-      classespixel.h * multiplier
-      )
+      classespixel.h * multiplier);
   }
   else{
     image(classes, wherex, wherey, 
       gettingScaleFactor(classespixel.w, classespixel.h, classespixel.w) *multiplier, 
       gettingScaleFactor(classespixel.w, classespixel.h, classespixel.h) *multiplier,
       classespixel.w * whichframe , 0 ,
-      classespixel.w, classespixel.h)
+      classespixel.w, classespixel.h);
   }
 }
 
