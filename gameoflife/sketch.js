@@ -2,7 +2,7 @@
 
 
 const CELL_SIZE = 20;
-const RENDERFRAME = 10;
+const RENDERFRAME = 2;
 const DEADCELL = 0;
 const LIVECELL = 1;
 

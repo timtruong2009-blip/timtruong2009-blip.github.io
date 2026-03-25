@@ -1,0 +1,86 @@
+All Metal-texture-creation-sets are CC0 and with some example tertures in every set.
+
+they use self-made synthetic background-textures
+
+The metal-texture-creation-set uses layers and layer-groups
+
+If you have problems opening the xcf-files, you need the newest GIMP version.
+
+
+
+you can change the background-texture by using the SELECT BY COLOR-tool and with a mask
+
+first select the layer where you want (it is called something with -00-bg, bg for background)
+
+now choose the SELECT BY COLOR-tool and select the area, you should set the threshold high to be sure to select all.
+
+in the next step you have to go to layer / mask / add layer mask / and choose selection.
+
+now you can copy your texture and copy it in the other one.
+
+
+
+the next step is about moving and rotating parts
+
+when you want to move parts, you can select a layer or a layer-group.
+
+then you can move parts with the mouse with the right mode.
+
+you can move parts vertically or horicontally with the arrow-keys.
+
+if your part doesn't move but your layer-selection-mark in the layer-tab, you have to click beside your image.
+
+if you want to rotate something without blurring (only -+90 or 180 degrees),
+
+in some cases you have to seperate this from parts you don't want rotate by copying to another layer
+
+then you go under layer>>transform>>rotate
+
+
+
+
+
+you also can change the drawing mode of each layer, for example changing opacity or the mode from normal to additive.
+
+and you can use effects like curves (colors/ curves) or other effects
+
+
+When you want to copy a whole layergroup, you can copy this layergroup.
+
+but when you want to copy parts of a layergroup 
+(for example if you want to seperate one of the blueish boxes in set4, you need an addon.
+
+you can find it here.
+
+http://registry.gimp.org/node/26396
+
+And when you want to copy a layergroup to another image, you need this addon.
+
+http://registry.gimp.org/node/27715
+
+
+
+Another useful addon is layer-effects
+
+http://registry.gimp.org/node/186
+(you should use the .py version and not .scm, because this is a better version, is has more
+
+i used this to setup the 3D-structure with highlight and shadow to my textures.
+
+layer effects adds highlights and shadows on the layer-border if something comes close to this border,
+if you don't want this, you have to delete something on the border and paste something to replace the deleted part
+you can see an example in set 2 and you can see an example what layer effects does on set 9.
+
+
+some other useful tricks are:
+
+under Select: Grow, thrink and border
+and under Filter: Blur/Gaussian blur
+
+Also a good plugin is the normalmap-plugin for gimp
+
+http://registry.gimp.org/node/69
+
+
+
+ 

@@ -11,6 +11,11 @@ const GRIDSIZE = 20;
 let map = [];
 let currentlySelected = 0;
 
+let survivalStartScreen;
+let survivalButton;
+const SCREENSCALE = 0.56302521008;
+const MAPCOLOR = (158, 124, 119);
+
 let schoolgirlIdle;
 let schoolgirlAttack;
 let schoolgirlRun;
@@ -22,6 +27,9 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   noSmooth();
   map = makeWorld();
+
+  survivalStartScreen = loadImage("School girl/survivorio.jpg");
+  survivalButton = loadImage("School girl/survivoributton.jpg");
 
   schoolgirlIdle = loadImage("School girl/Idle.png");
   schoolgirlAttack = loadImage("School girl/Attack.png");
@@ -36,6 +44,9 @@ function draw() {
   displaySheetStarting(schoolgirlIdle, schoolgirlPixel, 6, 0,0, 6);
 }
 
+function widthOrHeight(){
+
+}
 
 function makeWorld(){
   let world = [];
@@ -64,3 +75,4 @@ function displaySheetStarting(classes,classespixel, numofframe, wherex, wherey, 
     classespixel.w * whichframe , 0 ,
     classespixel.w, classespixel.h);
 }
+

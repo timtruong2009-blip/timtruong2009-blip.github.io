@@ -9,6 +9,7 @@
 - [perlin](perlin)
 - [cool battleground game](2dgrid)
 - [game of life](gameoflife)
+- [character](character)
 
 ## Assignments
 - [interactive scene](interactive_assi)
