@@ -4,6 +4,16 @@
 //
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
+// 150,610
+// 150,683
+
+// 320,673
+// 470,832
+
+// 695
+
+// button size 170 x 70
+// 4.5, 6.5
 
 const MAPSIZE = 400;
 const GRIDSIZE = 20;
@@ -13,8 +23,16 @@ let currentlySelected = 0;
 
 let survivalStartScreen;
 let survivalButton;
+
 const SCREENSCALE = 0.56302521008;
-const MAPCOLOR = (158, 124, 119);
+const MAPCOLOR = "#9e7c77";
+
+let screenWidth;
+let screenDistanceFromX;
+
+let gameState = "mainscreen";
+
+
 
 let schoolgirlIdle;
 let schoolgirlAttack;
@@ -40,13 +58,30 @@ function setup() {
 }
 
 function draw() {
+  
+  background(MAPCOLOR);
+  if (gameState === "mainscreen"){
+    calculateScreenWidth();
+    image(survivalStartScreen, screenDistanceFromX, 0, screenWidth , windowHeight);
 
-  displaySheetStarting(schoolgirlIdle, schoolgirlPixel, 6, 0,0, 6);
+
+    push();
+    imageMode(CENTER);
+    image(survivalButton, windowWidth/2, height * 0.83533653846) ;
+
+    pop();
+    
+  }
+  else if (gameState === "preparephase"){
+
+  }
+  else if (gameState === "gamestart"){
+
+  }
 }
 
-function widthOrHeight(){
 
-}
+
 
 function makeWorld(){
   let world = [];
@@ -76,3 +111,11 @@ function displaySheetStarting(classes,classespixel, numofframe, wherex, wherey, 
     classespixel.w, classespixel.h);
 }
 
+function calculateScreenWidth(){
+  screenWidth = windowHeight * SCREENSCALE;
+  screenDistanceFromX = windowWidth /2 - screenWidth /2;
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}
