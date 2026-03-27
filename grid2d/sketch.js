@@ -7,7 +7,7 @@
 // 150,610
 // 150,683
 
-// 320,673
+// 320,683
 // 470,832
 
 // 695
@@ -31,8 +31,8 @@ let screenWidth;
 let screenDistanceFromX;
 
 let gameState = "mainscreen";
-
-
+let buttonMultiply = 1;
+let buttonScale;
 
 let schoolgirlIdle;
 let schoolgirlAttack;
@@ -41,11 +41,7 @@ let schoolgirlPose;
 const schoolgirlPixel = {w: 128 , h: 128};
 let schoolgirlmulti = 2;
 
-function setup() {
-  createCanvas(windowWidth, windowHeight);
-  noSmooth();
-  map = makeWorld();
-
+function preload(){
   survivalStartScreen = loadImage("School girl/survivorio.jpg");
   survivalButton = loadImage("School girl/survivoributton.jpg");
 
@@ -54,26 +50,29 @@ function setup() {
   schoolgirlRun = loadImage("School girl/Walk.png");
   schoolgirlPose = loadImage("School girl/Idle.png");
 
+}
+
+function setup() {
+  buttonScale = calculateScale(832);
+  createCanvas(windowWidth, windowHeight);
+  noSmooth();
+  map = makeWorld();
+
+  
 
 }
 
 function draw() {
-  
+  windowResized();
   background(MAPCOLOR);
+  buttonScale = calculateScale(832);
   if (gameState === "mainscreen"){
-    calculateScreenWidth();
-    image(survivalStartScreen, screenDistanceFromX, 0, screenWidth , windowHeight);
-
-
-    push();
-    imageMode(CENTER);
-    image(survivalButton, windowWidth/2, height * 0.83533653846) ;
-
-    pop();
-    
+    makeMainScreen();
   }
   else if (gameState === "preparephase"){
+    preparing();
 
+    
   }
   else if (gameState === "gamestart"){
 
@@ -95,13 +94,6 @@ function makeWorld(){
   return world;               
 }
 
-function gettingScaleFactor(targetW, targetH, size){
-  let sw =  width/4 / targetW ;
-  let sh =   height/4 / targetH;
-  
-  return size * Math.min(sw, sh);
-}
-
 function displaySheetStarting(classes,classespixel, numofframe, wherex, wherey, multiplier){
   let whichframe = floor(frameCount / 10) % numofframe;
   image(classes, wherex, wherey, 
@@ -111,11 +103,21 @@ function displaySheetStarting(classes,classespixel, numofframe, wherex, wherey, 
     classespixel.w, classespixel.h);
 }
 
-function calculateScreenWidth(){
-  screenWidth = windowHeight * SCREENSCALE;
-  screenDistanceFromX = windowWidth /2 - screenWidth /2;
-}
-
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
+
+function mousePressed(){
+  if (gameState === "mainscreen"){
+    if (mouseX >= 150 * buttonScale + screenDistanceFromX && mouseX <= 320  * buttonScale + screenDistanceFromX && mouseY >= 610 * buttonScale && mouseY <= 683 * buttonScale){
+      gameState = "preparephase";
+    }
+  }
+  else if (gameState === "preparephase"){
+
+  }
+  else if (gameState === "gamestart"){
+
+  }
+}
+
