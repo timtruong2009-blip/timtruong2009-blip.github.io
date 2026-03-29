@@ -4,6 +4,12 @@
 //
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
+
+// Credit: 
+// - School girl character: Free Game Assets on Itch.io
+// - Starting Screen: Survivor.io
+// - Game concept: Survivor.io
+
 // 150,610
 // 150,683
 
@@ -19,6 +25,7 @@ const MAPSIZE = 400;
 const GRIDSIZE = 20;
 
 let map = [];
+let gridSize = 32;
 let currentlySelected = 0;
 
 let survivalStartScreen;
@@ -40,6 +47,8 @@ let schoolgirlRun;
 let schoolgirlPose;
 const schoolgirlPixel = {w: 128 , h: 128};
 let schoolgirlmulti = 2;
+
+let you;
 
 function preload(){
   survivalStartScreen = loadImage("School girl/survivorio.jpg");
@@ -75,7 +84,7 @@ function draw() {
     
   }
   else if (gameState === "gamestart"){
-
+    gameStart();
   }
 }
 
@@ -97,10 +106,10 @@ function makeWorld(){
 function displaySheetStarting(classes,classespixel, numofframe, wherex, wherey, multiplier){
   let whichframe = floor(frameCount / 10) % numofframe;
   image(classes, wherex, wherey, 
-    classespixel.w *multiplier, 
-    classespixel.h *multiplier,
-    classespixel.w * whichframe , 0 ,
-    classespixel.w, classespixel.h);
+    classespixel *multiplier, 
+    classespixel *multiplier,
+    classespixel * whichframe , 50 ,
+    classespixel, classespixel);
 }
 
 function windowResized() {
@@ -114,7 +123,10 @@ function mousePressed(){
     }
   }
   else if (gameState === "preparephase"){
-
+    if (mouseX >= 150 * buttonScale + screenDistanceFromX && mouseX <= 320  * buttonScale + screenDistanceFromX && mouseY >= 610 * buttonScale && mouseY <= 683 * buttonScale){
+      makePlayer();
+      gameState = "gamestart";
+    }
   }
   else if (gameState === "gamestart"){
 

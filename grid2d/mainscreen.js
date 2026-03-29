@@ -6,6 +6,7 @@ function makeMainScreen(){
   push();
 
   imageMode(CENTER);
+  
   enlargeButton(buttonScale);
   image(survivalButton, windowWidth/2, 644 * buttonScale , 170 * buttonScale * buttonMultiply, 70 * buttonScale * buttonMultiply) ;
   
