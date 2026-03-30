@@ -22,10 +22,9 @@
 // 4.5, 6.5
 
 const MAPSIZE = 400;
-const GRIDSIZE = 20;
+const GRIDSIZE = 32;
 
 let map = [];
-let gridSize = 32;
 let currentlySelected = 0;
 
 let survivalStartScreen;
