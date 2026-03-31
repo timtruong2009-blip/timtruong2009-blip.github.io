@@ -1,7 +1,8 @@
 function gameStart(){
+  generateSurrounding();
   loadingCharacter();
   characterMoving();
-  generateSurrounding();
+  
 }
 
 
@@ -26,6 +27,9 @@ function generateSurrounding() {
   let gridX = floor(you.x / GRIDSIZE);
   let gridY = floor(you.y / GRIDSIZE);
 
+  let whereInGridx = you.x % GRIDSIZE;
+  let whereInGridy = you.y % GRIDSIZE;
+
   let gridOnScreenH = floor(windowHeight / GRIDSIZE);
   let gridOnScreenW = floor(windowWidth / GRIDSIZE);
 
@@ -34,8 +38,13 @@ function generateSurrounding() {
 
   for (let y = gridY - gridOnScreenH; y < gridY + gridOnScreenH; y ++){
     for (let x = gridX - gridOnScreenW; x < gridX + gridOnScreenW; x ++){
-      print((x - smallestX) * GRIDSIZE, y - smallestY * GRIDSIZE, GRIDSIZE);
-      square((x - smallestX) * GRIDSIZE, (y - smallestY) * GRIDSIZE, GRIDSIZE);
+      if (map[y][x] === 1){
+        fill("black");
+      }
+      else{
+        fill("white");
+      }
+      square((x - smallestX) * GRIDSIZE - whereInGridx , (y - smallestY) * GRIDSIZE - whereInGridy, GRIDSIZE);
     }
   }
 }
@@ -65,8 +74,12 @@ function characterMoving(){
       you.y += 1;
     }
     if (key === "d"){
-      you.x += 1;
+      you.x += 1;   
     }
+    you.currentAction = schoolgirlRun;
+  }
+  else{
+    you.currentAction = schoolgirlIdle;
   }
   
 }

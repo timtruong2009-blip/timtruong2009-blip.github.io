@@ -94,8 +94,14 @@ function makeWorld(){
   let world = [];
   for (let y = 0; y <= MAPSIZE; y ++){
     let row_x = [];
-    for (let x = 0; x <= MAPSIZE; x ++){                  
-      row_x.push(0) ;                
+    for (let x = 0; x <= MAPSIZE; x ++){
+      if (random(100) > 50){
+        row_x.push(0) ;  
+      }
+      else{
+        row_x.push(1);
+      }
+                    
     }                  
     world.push(row_x);                  
   }
