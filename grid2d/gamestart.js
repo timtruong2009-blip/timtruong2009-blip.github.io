@@ -1,4 +1,6 @@
 function gameStart(){
+
+  spawnMonster();
   generateSurrounding();
   loadingCharacter();
   characterMoving();
@@ -54,35 +56,55 @@ function makePlayer(){
 }
 
 function loadingCharacter(){
+  let x = windowWidth/2;
   push();
+  if (flip === true){
+    scale(-1,1);
+    x = -x;
+  }
 
   imageMode(CENTER);
-  displaySheetStarting(you.currentAction, schoolgirlPixel.w, 6, windowWidth/2, windowHeight/2, buttonScale * 2);
+  displaySheetStarting(you.currentAction, schoolgirlPixel.w, 6, x, windowHeight/2, buttonScale);
 
   pop();
 }
 
 function characterMoving(){
+  if (keyIsDown(87)){
+    you.y -= 1;
+  }
+  if (keyIsDown(65)){
+    you.x -= 1;
+    flip = true;
+  }
+  if (keyIsDown(83)){
+    you.y += 1;
+  }
+  if (keyIsDown(68)){
+    you.x += 1;
+    flip = false;
+  }
   if (keyIsPressed){
-    if (key === "w"){
-      you.y -= 1;
-    }
-    if (key === "a"){
-      you.x -= 1;
-    }
-    if (key === "s"){
-      you.y += 1;
-    }
-    if (key === "d"){
-      you.x += 1;   
-    }
     you.currentAction = schoolgirlRun;
   }
   else{
     you.currentAction = schoolgirlIdle;
   }
-  
+}
+
+class Monster{
+  constructor(x,y){
+    this.x = x;
+    this.y = y;
+  }
 }
 
 
+
+function spawnMonster(){
+  if (millistime + monsterTimeSpawn < millis()){
+    
+    millistime = millis();
+  }
+}
 
