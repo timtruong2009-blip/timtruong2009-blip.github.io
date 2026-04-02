@@ -4,6 +4,8 @@ function gameStart(){
   generateSurrounding();
   loadingCharacter();
   characterMoving();
+
+  print(allMonster);
   
 }
 
@@ -70,6 +72,7 @@ function loadingCharacter(){
 }
 
 function characterMoving(){
+  let prevxy = structuredClone({x: you.x, y: you.y});
   if (keyIsDown(87)){
     you.y -= 1;
   }
@@ -84,8 +87,12 @@ function characterMoving(){
     you.x += 1;
     flip = false;
   }
-  if (keyIsPressed){
+  
+  if (you.y !== prevxy.y || you.x !== prevxy.x && ! usingMove){
     you.currentAction = schoolgirlRun;
+  }
+  else if (usingMove){
+    SchoolgirlMoves();
   }
   else{
     you.currentAction = schoolgirlIdle;
@@ -103,8 +110,14 @@ class Monster{
 
 function spawnMonster(){
   if (millistime + monsterTimeSpawn < millis()){
-    
+    let newMob = new Monster(floor(random(you.x / GRIDSIZE - 20, you.x/ GRIDSIZE + 20)), floor(random(you.y/ GRIDSIZE - 20, you.y/ GRIDSIZE + 20)));
+    allMonster.push(newMob);
     millistime = millis();
   }
 }
+
+function SchoolgirlMoves(){
+
+}
+
 

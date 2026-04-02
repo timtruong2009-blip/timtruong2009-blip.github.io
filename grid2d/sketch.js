@@ -47,12 +47,14 @@ let schoolgirlPose;
 const schoolgirlPixel = {w: 128 , h: 128};
 let schoolgirlmulti = 2;
 
+let usingMove = false;
+
 let flip = false;
 let millistime = 0;
 
 let you;
 let allMonster = [];
-let monsterTimeSpawn = 10000;
+let monsterTimeSpawn = 1000;
 
 function preload(){
   survivalStartScreen = loadImage("School girl/survivorio.jpg");
@@ -66,6 +68,7 @@ function preload(){
 }
 
 function setup() {
+  noStroke();
   buttonScale = calculateScale(832);
   createCanvas(windowWidth, windowHeight);
   noSmooth();
