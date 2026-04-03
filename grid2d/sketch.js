@@ -47,14 +47,15 @@ let schoolgirlPose;
 const schoolgirlPixel = {w: 128 , h: 128};
 let schoolgirlmulti = 2;
 
-let usingMove = false;
+let zombies;
 
 let flip = false;
 let millistime = 0;
 
 let you;
 let allMonster = [];
-let monsterTimeSpawn = 1000;
+let monsterTimeSpawn = 100;
+const MONSTERSPAWNRANGE = 10;
 
 function preload(){
   survivalStartScreen = loadImage("School girl/survivorio.jpg");
@@ -64,6 +65,9 @@ function preload(){
   schoolgirlAttack = loadImage("School girl/Attack.png");
   schoolgirlRun = loadImage("School girl/Walk.png");
   schoolgirlPose = loadImage("School girl/Idle.png");
+
+  zombies =  loadImage("School girl/zombies.png");
+
 
 }
 
@@ -142,7 +146,7 @@ function mousePressed(){
     }
   }
   else if (gameState === "gamestart"){
-
+    you.currentAction = schoolgirlAttack;
   }
 }
 
