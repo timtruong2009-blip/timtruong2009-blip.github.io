@@ -64,7 +64,7 @@ function preload(){
   schoolgirlIdle = loadImage("School girl/Idle.png");
   schoolgirlAttack = loadImage("School girl/Attack.png");
   schoolgirlRun = loadImage("School girl/Walk.png");
-  schoolgirlPose = loadImage("School girl/Idle.png");
+  schoolgirlPose = loadImage("School girl/Dialogue.png");
 
   zombies =  loadImage("School girl/zombies.png");
 
@@ -147,6 +147,8 @@ function mousePressed(){
   }
   else if (gameState === "gamestart"){
     you.currentAction = schoolgirlAttack;
+    you.attacking = true;
+    you.frameOn = frameCount;
   }
 }
 

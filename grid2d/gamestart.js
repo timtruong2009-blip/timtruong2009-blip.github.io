@@ -1,8 +1,9 @@
 
 function gameStart(){
+  checkingWhatFrameAndSwitchBack();
   generateSurrounding();
   spawnMonster();
-  loadingCharacter();
+  schoolgirlAllAnimation();
   characterMoving();
   
 }
@@ -15,6 +16,9 @@ class Player{
     this.y = y * GRIDSIZE;
     this.health = 100;
     this.usingMove = false;
+    this.attacking = false;
+
+    this.frameOn = 0;
   }
 }
 
@@ -71,16 +75,15 @@ function makePlayer(){
 }
 
 
-function loadingCharacter(){
+function loadingCharacter(numofframe){
   let x = windowWidth/2;
   push();
   if (flip === true){
     scale(-1,1);
     x = -x;
   }
-
   imageMode(CENTER);
-  displaySheetStarting(you.currentAction, schoolgirlPixel.w, 6, x, windowHeight/2, buttonScale * 1.2);
+  displaySheetStarting(you.currentAction, schoolgirlPixel.w, numofframe, x, windowHeight/2, buttonScale * 1.2);
 
   pop();
 }
@@ -89,30 +92,37 @@ function loadingCharacter(){
 function characterMoving(){
 
   let prevxy = structuredClone({x: you.x, y: you.y});
-  if (keyIsDown(87)){
+
+  if (!you.usingMove && !you.attacking){
+    if (keyIsDown(87)){
     you.y -= you.speed;
-  }
-  if (keyIsDown(65)){
-    you.x -= you.speed;
-    flip = true;
-  }
-  if (keyIsDown(83)){
-    you.y += you.speed;
-  }
-  if (keyIsDown(68)){
-    you.x += you.speed;
-    flip = false;
-  }
-  
-  if ((you.y !== prevxy.y || you.x !== prevxy.x) && ! you.usingMove){
-    you.currentAction = schoolgirlRun;
-  }
-  else if (you.usingMove){
-    SchoolgirlMoves();
+    }
+    if (keyIsDown(65)){
+      you.x -= you.speed;
+      flip = true;
+    }
+    if (keyIsDown(83)){
+      you.y += you.speed;
+    }
+    if (keyIsDown(68)){
+      you.x += you.speed;
+      flip = false;
+    }
+
+    if ((you.y !== prevxy.y || you.x !== prevxy.x) && ! you.attacking){
+      you.currentAction = schoolgirlRun;
+    }
+    else if (you.attacking){
+      you.currentAction = schoolgirlAttack;
+    }
+    else{
+      you.currentAction = schoolgirlIdle;
+    }
   }
   else{
-    you.currentAction = schoolgirlIdle;
+    you.currentAction = schoolgirlPose;
   }
+  
 }
 
 
@@ -148,9 +158,27 @@ function keyPressed(){
   }
 }
 
-
-function SchoolgirlMoves(){
-  you.currentAction = schoolgirlAttack;
+function schoolgirlAllAnimation(){
+  if (you.currentAction === schoolgirlIdle){
+    loadingCharacter(6);
+  }
+  else if (you.currentAction === schoolgirlRun){
+    loadingCharacter(12);
+  }
+  else if (you.currentAction === schoolgirlAttack){
+    loadingCharacter(6);
+  }
+  else if (you.currentAction === schoolgirlPose){
+    loadingCharacter(5);
+  }
 }
 
+function checkingWhatFrameAndSwitchBack(){
+  if (you.attacking){
+    if (frameCount - you.frameOn >= 60) { 
+      you.attacking = false;
+      you.currentAction = schoolgirlIdle;
+    }
+  }
+}
 
