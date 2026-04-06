@@ -1,11 +1,15 @@
 
 function gameStart(){
   checkingWhatFrameAndSwitchBack();
+
   generateSurrounding();
+
   spawnMonster();
+
   schoolgirlAllAnimation();
-  characterMoving();
   
+  characterMoving();
+
 }
 
 
@@ -19,19 +23,20 @@ class Player{
     this.attacking = false;
 
     this.frameOn = 0;
+    
   }
 }
-
 
 class SchoolGirl extends Player{
   constructor(classes, x, y ){
     super(classes,x, y);
     this.currentAction = schoolgirlIdle;
-    this.speed = 10;
+    this.speed = 2;
+    this.hitboxRange = 50;
+    this.cooldown = 2000
   }  
 
 }
-
 
 function generateSurrounding() {
   let gridX = floor(you.x / GRIDSIZE);
@@ -69,31 +74,25 @@ function generateSurrounding() {
 
 }
 
-
 function makePlayer(){
   you = new SchoolGirl("schoolgirl", round(map.length/2), round(map.length/2));
 }
 
-
 function loadingCharacter(numofframe){
   let x = windowWidth/2;
   push();
-  if (flip === true){
+  if (flip){
     scale(-1,1);
     x = -x;
   }
   imageMode(CENTER);
-  displaySheetStarting(you.currentAction, schoolgirlPixel.w, numofframe, x, windowHeight/2, buttonScale * 1.2);
-
+  displaySheetStarting(you.currentAction, schoolgirlPixel.w, numofframe, x, windowHeight/2, buttonScale * 1.2, you.frameOn);
   pop();
 }
 
-
 function characterMoving(){
-
   let prevxy = structuredClone({x: you.x, y: you.y});
-
-  if (!you.usingMove && !you.attacking){
+  if (!you.usingMove){
     if (keyIsDown(87)){
     you.y -= you.speed;
     }
@@ -120,13 +119,9 @@ function characterMoving(){
     }
   }
   else{
-    you.currentAction = schoolgirlPose;
   }
   
 }
-
-
-
 
 function spawnMonster(){
   if (millistime + monsterTimeSpawn < millis()){
@@ -139,7 +134,6 @@ function spawnMonster(){
 function drawMonster(smallestX, smallestY, biggestX, biggestY){
   for (let zomb of allMonster){
     if (zomb.x / GRIDSIZE  > smallestX && zomb.y / GRIDSIZE > smallestY && zomb.x /GRIDSIZE < biggestX && zomb.y / GRIDSIZE < biggestY){
-
       push();
       
       imageMode(CENTER);
@@ -152,8 +146,10 @@ function drawMonster(smallestX, smallestY, biggestX, biggestY){
 }
 
 function keyPressed(){
-  if (key === "e"){
+  if (key === "e" && !you.attacking){
+    you.currentAction = schoolgirlPose;
     you.usingMove = true;
+    you.frameOn = frameCount;
     
   }
 }
@@ -180,5 +176,26 @@ function checkingWhatFrameAndSwitchBack(){
       you.currentAction = schoolgirlIdle;
     }
   }
+  else if (you.usingMove){
+    if (frameCount - you.frameOn >= 50) { 
+      you.usingMove = false;
+      you.currentAction = schoolgirlIdle;
+    }
+  }
+}
+
+function normalAttack(){
+  let whereHitBox = 0
+  if (flip){
+    whereHitBox = structuredClone(-you.hitboxRange);;
+  }
+  print(whereHitBox);
+  for (let i = allMonster.length -1; i >= 0; i--){
+    let zomb = allMonster[i];
+    if (zomb.x  > you.x + whereHitBox && zomb.x < you.x + you.hitboxRange + whereHitBox && you.y - you.hitboxRange < zomb.y && you.y > zomb.y){
+      allMonster.splice(i, 1);
+    }
+  }
+
 }
 

@@ -21,55 +21,66 @@
 // button size 170 x 70
 // 4.5, 6.5
 
-const MAPSIZE = 400;
-const GRIDSIZE = 32;
-
-let map = [];
-let currentlySelected = 0;
-
-let survivalStartScreen;
-let survivalButton;
-
-const SCREENSCALE = 0.56302521008;
-const MAPCOLOR = "#9e7c77";
-
-let screenWidth;
-let screenDistanceFromX;
-
-let gameState = "mainscreen";
-let buttonMultiply = 1;
-let buttonScale;
-
+// image and stuff
 let schoolgirlIdle;
 let schoolgirlAttack;
 let schoolgirlRun;
 let schoolgirlPose;
+
+let zombies;
+let explosion
+let survivalStartScreen;
+let survivalButton;
+
+
+
+
+
+let map = [];
+let currentlySelected = 0;
+
+// map measurement stuff
+const MAPSIZE = 400;
+const GRIDSIZE = 32;
+const MAPCOLOR = "#9e7c77";
+
+// screen measurement stuff
+let screenWidth;
+let screenDistanceFromX;
+const SCREENSCALE = 0.56302521008;
+
+// button
+let gameState = "mainscreen";
+let buttonMultiply = 1;
+let buttonScale;
+
+// school girl measurement
 const schoolgirlPixel = {w: 128 , h: 128};
 let schoolgirlmulti = 2;
 
-let zombies;
-
+// some cool variable
 let flip = false;
 let millistime = 0;
 
+// monster and player
 let you;
 let allMonster = [];
-let monsterTimeSpawn = 100;
+let monsterTimeSpawn = 1000;
 const MONSTERSPAWNRANGE = 10;
 
+
 function preload(){
-  survivalStartScreen = loadImage("School girl/survivorio.jpg");
-  survivalButton = loadImage("School girl/survivoributton.jpg");
+  survivalStartScreen = loadImage("otherImage/survivorio.jpg");
+  survivalButton = loadImage("otherImage/survivoributton.jpg");
+  zombies =  loadImage("otherImage/zombies.png");
+  explosion = loadImage("otherImage/explosion.png");
 
   schoolgirlIdle = loadImage("School girl/Idle.png");
   schoolgirlAttack = loadImage("School girl/Attack.png");
   schoolgirlRun = loadImage("School girl/Walk.png");
   schoolgirlPose = loadImage("School girl/Dialogue.png");
-
-  zombies =  loadImage("School girl/zombies.png");
-
-
 }
+
 
 function setup() {
   noStroke();
@@ -77,10 +88,8 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   noSmooth();
   map = makeWorld();
-
-  
-
 }
+
 
 function draw() {
   windowResized();
@@ -91,15 +100,11 @@ function draw() {
   }
   else if (gameState === "preparephase"){
     preparing();
-
-    
   }
   else if (gameState === "gamestart"){
     gameStart();
   }
 }
-
-
 
 
 function makeWorld(){
@@ -120,8 +125,15 @@ function makeWorld(){
   return world;               
 }
 
-function displaySheetStarting(classes,classespixel, numofframe, wherex, wherey, multiplier){
-  let whichframe = floor(frameCount / 10) % numofframe;
+
+function displaySheetStarting(classes,classespixel, numofframe, wherex, wherey, multiplier, startFrame){
+  let whatFrameNow = frameCount - startFrame;
+  let whichframe = floor(whatFrameNow / 10) % numofframe;
+  if (gameState === "gamestart"){
+    if (whichframe >= 4 && you.attacking){
+      normalAttack();
+    }
+  }
   image(classes, wherex, wherey, 
     classespixel *multiplier, 
     classespixel *multiplier,
@@ -129,9 +141,11 @@ function displaySheetStarting(classes,classespixel, numofframe, wherex, wherey, 
     classespixel, classespixel);
 }
 
+
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
+
 
 function mousePressed(){
   if (gameState === "mainscreen"){
@@ -146,9 +160,12 @@ function mousePressed(){
     }
   }
   else if (gameState === "gamestart"){
-    you.currentAction = schoolgirlAttack;
-    you.attacking = true;
-    you.frameOn = frameCount;
+    if (!you.usingMove){
+      you.currentAction = schoolgirlAttack;
+      you.attacking = true;
+      you.frameOn = frameCount;
+    }
+      
   }
 }
 
