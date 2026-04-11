@@ -2,13 +2,19 @@
 function gameStart(){
   checkingWhatFrameAndSwitchBack();
 
+  spawnMonster();
+
   generateSurrounding();
 
-  spawnMonster();
+  spawningCrate();
+
+  movingMonster();
 
   schoolgirlAllAnimation();
   
   characterMoving();
+
+  drawingAnimation();
 
 }
 
@@ -42,8 +48,8 @@ function generateSurrounding() {
   let gridX = floor(you.x / GRIDSIZE);
   let gridY = floor(you.y / GRIDSIZE);
 
-  let whereInGridx = you.x % GRIDSIZE;
-  let whereInGridy = you.y % GRIDSIZE;
+  let whereInGridx = you.x - gridX * GRIDSIZE;
+  let whereInGridy = you.y - gridY * GRIDSIZE;
 
   let gridOnScreenH = floor(windowHeight / GRIDSIZE);
   let gridOnScreenW = floor(windowWidth / GRIDSIZE);
@@ -54,22 +60,45 @@ function generateSurrounding() {
   let biggestX = gridX + gridOnScreenW;
   let biggestY = gridY + gridOnScreenH
 
+  map[gridX][gridY] = 6;
+
   for (let y = smallestY; y < gridY + gridOnScreenH; y ++){
     for (let x = smallestX; x < gridX + gridOnScreenW; x ++){
+      let cordX = (x - smallestX) * GRIDSIZE - whereInGridx;
+      let cordY = (y - smallestY) * GRIDSIZE - whereInGridy
+      
       if (x < 0 || x > MAPSIZE || y < 0 || y > MAPSIZE){
         fill(MAPCOLOR);
-      }
-
-      else if (map[y][x] === 1){
-        fill("black");
+        square(cordX, cordY, GRIDSIZE);
       }
       else{
-        fill("white");
+        image(grass, cordX,cordY , GRIDSIZE, GRIDSIZE);
+        if (map[y][x] === 0){
+          // grass 
+        }
+        else if (map[y][x] === 1){
+          fill("red");
+          square(cordX, cordY, GRIDSIZE);
+        }
+        else if (map[y][x] === 2){
+          fill("black");
+          square(cordX, cordY, GRIDSIZE);
+        }
+        else if (map[y][x] === 3){
+          fill("blue");
+          square(cordX, cordY, GRIDSIZE);
+        }
+        else if (map[y][x] === 6){
+          fill("pink");
+          square(cordX, cordY, GRIDSIZE);
+        }
+        
       }
-      square((x - smallestX) * GRIDSIZE - whereInGridx , (y - smallestY) * GRIDSIZE - whereInGridy, GRIDSIZE);
+      
+
     }
   }
-
+  checkingCrateTouchy(gridX, gridY);
   drawMonster(smallestX, smallestY, biggestX, biggestY);
 
 }
@@ -125,20 +154,25 @@ function characterMoving(){
 
 function spawnMonster(){
   if (millistime + monsterTimeSpawn < millis()){
-    let newMob = {x:floor(random(you.x - MONSTERSPAWNRANGE * GRIDSIZE, you.x + MONSTERSPAWNRANGE * GRIDSIZE)), y:floor(random(you.y - MONSTERSPAWNRANGE * GRIDSIZE, you.y + MONSTERSPAWNRANGE * GRIDSIZE))};
+    let newMob = {x:floor(random(you.x - MONSTERSPAWNRANGE * GRIDSIZE, you.x + MONSTERSPAWNRANGE * GRIDSIZE)), y:floor(random(you.y - MONSTERSPAWNRANGE * GRIDSIZE, you.y + MONSTERSPAWNRANGE * GRIDSIZE)), speed: random(1,3)};
     allMonster.push(newMob);
     millistime = millis();
   }
 }
 
 function drawMonster(smallestX, smallestY, biggestX, biggestY){
+  allMonsterOnScreen = [];
   for (let zomb of allMonster){
     if (zomb.x / GRIDSIZE  > smallestX && zomb.y / GRIDSIZE > smallestY && zomb.x /GRIDSIZE < biggestX && zomb.y / GRIDSIZE < biggestY){
+      allMonsterOnScreen.push(zomb);
       push();
-      
       imageMode(CENTER);
       translate(windowWidth / 2, windowHeight / 2);
-      image(zombies, zomb.x - you.x, zomb.y - you.y, GRIDSIZE *2,GRIDSIZE *2);
+      translate(zomb.x - you.x , zomb.y - you.y);
+      if (zomb.x > you.x){
+        scale(-1,1);
+      }
+      image(zombies, 0 , 0, GRIDSIZE *2,GRIDSIZE *2);
 
       pop();
     }
@@ -185,17 +219,64 @@ function checkingWhatFrameAndSwitchBack(){
 }
 
 function normalAttack(){
-  let whereHitBox = 0
+  let whereHitBox = -1
   if (flip){
-    whereHitBox = structuredClone(-you.hitboxRange);;
+    whereHitBox = structuredClone(-you.hitboxRange +1);;
   }
-  print(whereHitBox);
   for (let i = allMonster.length -1; i >= 0; i--){
     let zomb = allMonster[i];
-    if (zomb.x  > you.x + whereHitBox && zomb.x < you.x + you.hitboxRange + whereHitBox && you.y - you.hitboxRange < zomb.y && you.y > zomb.y){
+    if (zomb.x  > you.x + whereHitBox && zomb.x < you.x + you.hitboxRange + whereHitBox && you.y - you.hitboxRange * 1.5 < zomb.y && you.y + you.hitboxRange /1.5 > zomb.y){
       allMonster.splice(i, 1);
     }
   }
 
 }
 
+function movingMonster() {
+  for (let zomb of allMonster) {
+    let distancex = you.x - zomb.x;
+    let distancey = you.y - zomb.y;
+    let totalDistance = dist(you.x, you.y, zomb.x, zomb.y);
+
+    if (totalDistance > 0) {
+      zomb.x += round((distancex / totalDistance) * zomb.speed);
+      zomb.y += round((distancey / totalDistance) * zomb.speed);
+    }
+  }
+}
+
+function spawningCrate(){
+  if (crateMillis + crateSpawnSpeed < millis()){
+    let randomStuff = round(random(1,3));
+    if (randomStuff === 1){
+      map[round(random(MAPSIZE -1))][round(random(MAPSIZE -1))] = 1
+    }
+    else if (randomStuff === 2){
+      map[round(random(MAPSIZE -1))][round(random(MAPSIZE -1))] = 2
+    }
+    if (randomStuff === 3){
+      map[round(random(MAPSIZE -1))][round(random(MAPSIZE -1))] = 3
+    }
+  }
+}
+
+function checkingCrateTouchy(gridX, gridY){
+  
+  if (map[gridY][gridX] === 1){
+    console.log("herej");
+    explosionStart = frameCount;
+  }
+}
+
+function drawingAnimation(){
+  if (explosionStart !== false && frameCount - explosionStart < 10){
+    push()
+
+    imageMode(CENTER);
+    translate(windowWidth/2, windowHeight /2);
+    image(explosion, 0 ,0);
+
+    pop();
+  }
+  
+}

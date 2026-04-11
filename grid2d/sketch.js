@@ -28,10 +28,10 @@ let schoolgirlRun;
 let schoolgirlPose;
 
 let zombies;
-let explosion
+let explosion;
 let survivalStartScreen;
 let survivalButton;
-
+let grass;
 
 
 
@@ -43,6 +43,9 @@ let currentlySelected = 0;
 const MAPSIZE = 400;
 const GRIDSIZE = 32;
 const MAPCOLOR = "#9e7c77";
+
+const crateSpawnSpeed = 10;
+let crateMillis = 0;
 
 // screen measurement stuff
 let screenWidth;
@@ -61,12 +64,17 @@ let schoolgirlmulti = 2;
 // some cool variable
 let flip = false;
 let millistime = 0;
+let explosionStart = false;
 
 // monster and player
 let you;
 let allMonster = [];
+let allMonsterOnScreen = [];
 let monsterTimeSpawn = 1000;
 const MONSTERSPAWNRANGE = 10;
+let monsterSpeed = 1;
+
+
 
 
 function preload(){
@@ -74,6 +82,7 @@ function preload(){
   survivalButton = loadImage("otherImage/survivoributton.jpg");
   zombies =  loadImage("otherImage/zombies.png");
   explosion = loadImage("otherImage/explosion.png");
+  grass = loadImage("otherImage/grass.png");
 
   schoolgirlIdle = loadImage("School girl/Idle.png");
   schoolgirlAttack = loadImage("School girl/Attack.png");
@@ -111,14 +120,8 @@ function makeWorld(){
   let world = [];
   for (let y = 0; y <= MAPSIZE; y ++){
     let row_x = [];
-    for (let x = 0; x <= MAPSIZE; x ++){
-      if (random(100) > 50){
-        row_x.push(0) ;  
-      }
-      else{
-        row_x.push(1);
-      }
-                    
+    for (let x = 0; x <= MAPSIZE; x ++){  
+      row_x.push(0) ;  
     }                  
     world.push(row_x);                  
   }
