@@ -32,6 +32,8 @@ let explosion;
 let survivalStartScreen;
 let survivalButton;
 let grass;
+let medic;
+let bomb;
 
 
 
@@ -60,11 +62,15 @@ let buttonScale;
 // school girl measurement
 const schoolgirlPixel = {w: 128 , h: 128};
 let schoolgirlmulti = 2;
+let playerHitBox = 20;
 
 // some cool variable
 let flip = false;
 let millistime = 0;
 let explosionStart = false;
+let lastDamageTick = 0;
+let DPSAllow = 200;
+
 
 // monster and player
 let you;
@@ -83,6 +89,8 @@ function preload(){
   zombies =  loadImage("otherImage/zombies.png");
   explosion = loadImage("otherImage/explosion.png");
   grass = loadImage("otherImage/grass.png");
+  medic = loadImage("otherImage/medic.png");
+  bomb = loadImage("otherImage/bomb.png");
 
   schoolgirlIdle = loadImage("School girl/Idle.png");
   schoolgirlAttack = loadImage("School girl/Attack.png");

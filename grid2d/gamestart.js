@@ -15,13 +15,15 @@ function gameStart(){
   characterMoving();
 
   drawingAnimation();
+
+  isPlayerAttacked();
+
+  console.log(you.health);
 }
 
 function generateSurrounding() {
   let gridX = floor(you.x / GRIDSIZE);
   let gridY = floor(you.y / GRIDSIZE);
-
-  checkingCrateTouchy(gridX, gridY);
 
   let whereInGridx = you.x - gridX * GRIDSIZE;
   let whereInGridy = you.y - gridY * GRIDSIZE;
@@ -29,16 +31,16 @@ function generateSurrounding() {
   let gridOnScreenH = floor(windowHeight / GRIDSIZE);
   let gridOnScreenW = floor(windowWidth / GRIDSIZE);
 
-  let smallestX = gridX - gridOnScreenW ;
-  let smallestY = gridY - gridOnScreenH ;
+  let smallestX = gridX - Math.floor(gridOnScreenW/2);
+  let smallestY = gridY - Math.floor(gridOnScreenH/2) ;
 
-  let biggestX = gridX + gridOnScreenW;
-  let biggestY = gridY + gridOnScreenH
+  let biggestX = gridX + Math.floor(gridOnScreenW/2) +2;
+  let biggestY = gridY + Math.floor(gridOnScreenH/2) +2;
 
-  for (let y = smallestY; y < gridY + gridOnScreenH; y ++){
-    for (let x = smallestX; x < gridX + gridOnScreenW; x ++){
+  for (let y = smallestY; y < biggestY; y ++){
+    for (let x = smallestX; x < biggestX; x ++){
       let cordX = (x - smallestX) * GRIDSIZE - whereInGridx;
-      let cordY = (y - smallestY) * GRIDSIZE - whereInGridy
+      let cordY = (y - smallestY) * GRIDSIZE - whereInGridy;
       
       if (x < 0 || x > MAPSIZE || y < 0 || y > MAPSIZE){
         fill(MAPCOLOR);
@@ -50,21 +52,22 @@ function generateSurrounding() {
           // grass 
         }
         else if (map[y][x] === 1){
-          fill("red");
-          square(cordX, cordY, GRIDSIZE);
+          checkingCrateTouchy(gridX, gridY);
+          image(bomb, cordX, cordY, GRIDSIZE, GRIDSIZE);
         }
         else if (map[y][x] === 2){
+          checkingCrateTouchy(gridX, gridY);
           fill("black");
-          square(cordX, cordY, GRIDSIZE);
+          image(medic, cordX, cordY, GRIDSIZE, GRIDSIZE);
         }
         else if (map[y][x] === 3){
+          checkingCrateTouchy(gridX, gridY);
           fill("blue");
           square(cordX, cordY, GRIDSIZE);
         }
       }
     }
   }
-  
   drawMonster(smallestX, smallestY, biggestX, biggestY);
 
 }
@@ -115,7 +118,7 @@ function characterMoving(){
   let prevxy = structuredClone({x: you.x, y: you.y});
   if (!you.usingMove){
     if (keyIsDown(87)){
-    you.y -= you.speed;
+      you.y -= you.speed;
     }
     if (keyIsDown(65)){
       you.x -= you.speed;
@@ -173,6 +176,16 @@ function normalAttack(){
 
 }
 
+function isPlayerAttacked(){
+  for (let zomb of allMonster){
+    if (zomb.x > you.x - playerHitBox && zomb.x < you.x + playerHitBox && zomb.y > you.y - playerHitBox*3 && zomb.y < you.y + playerHitBox ){
+      if (lastDamageTick + DPSAllow < millis()){
+        you.health -= 1;
+        lastDamageTick = millis();
+      }
+    }
+  }
+}
 // -------------------------------------------------The Monster--------------------------------------------------
 function spawnMonster(){
   if (millistime + monsterTimeSpawn < millis()){
@@ -208,8 +221,8 @@ function movingMonster() {
     let totalDistance = dist(you.x, you.y, zomb.x, zomb.y);
 
     if (totalDistance > 0) {
-      zomb.x += round((distancex / totalDistance) * zomb.speed);
-      zomb.y += round((distancey / totalDistance) * zomb.speed);
+      zomb.x += (distancex / totalDistance) * zomb.speed;
+      zomb.y += (distancey / totalDistance) * zomb.speed;
     }
   }
 }
@@ -220,7 +233,6 @@ function keyPressed(){
     you.currentAction = schoolgirlPose;
     you.usingMove = true;
     you.frameOn = frameCount;
-    
   }
 }
 
@@ -242,15 +254,18 @@ function checkingWhatFrameAndSwitchBack(){
 function spawningCrate(){
   if (crateMillis + crateSpawnSpeed < millis()){
     let randomStuff = round(random(1,3));
+    let randomPlace = [round(random(MAPSIZE -1)), round(random(MAPSIZE -1))];
+
     if (randomStuff === 1){
-      map[round(random(MAPSIZE -1))][round(random(MAPSIZE -1))] = 1
+      map[randomPlace[0]][randomPlace[1]] = 1
     }
     else if (randomStuff === 2){
-      map[round(random(MAPSIZE -1))][round(random(MAPSIZE -1))] = 2
+      map[randomPlace[0]][randomPlace[1]] = 2
     }
     else if (randomStuff === 3){
-      map[round(random(MAPSIZE -1))][round(random(MAPSIZE -1))] = 3
+      map[randomPlace[0]][randomPlace[1]] = 3
     }
+    crateMillis = millis();
   }
 }
 
@@ -258,21 +273,20 @@ function checkingCrateTouchy(gridX, gridY){
   if (map[gridY][gridX] === 1){
     console.log("herej");
     explosionStart = frameCount;
+    map[gridY][gridX] = 0;
   }
 }
 
 function drawingAnimation(){
   if (explosionStart !== false && frameCount - explosionStart < 10){
     push()
-
     imageMode(CENTER);
     translate(windowWidth/2, windowHeight /2);
-    image(explosion, 0 ,0);
+    image(explosion, 0 ,0, 1000, 1000);
 
     pop();
   }
   else{
     explosionStart = false;
   }
-  
 }
