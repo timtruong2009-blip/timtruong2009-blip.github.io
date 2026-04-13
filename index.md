@@ -14,4 +14,4 @@
 ## Assignments
 - [interactive scene](interactive_assi)
 - [arrays and object notation](array_object)
-- [2D grid thingy][grid2d]
+- [2D grid thingy](grid2d)

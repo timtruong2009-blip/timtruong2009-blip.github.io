@@ -26,6 +26,7 @@ let schoolgirlIdle;
 let schoolgirlAttack;
 let schoolgirlRun;
 let schoolgirlPose;
+let shockwave;
 
 let zombies;
 let explosion;
@@ -77,7 +78,7 @@ let you;
 let allMonster = [];
 let allMonsterOnScreen = [];
 let monsterTimeSpawn = 1000;
-const MONSTERSPAWNRANGE = 10;
+const MONSTERSPAWNRANGE = 100;
 let monsterSpeed = 1;
 
 
@@ -96,6 +97,7 @@ function preload(){
   schoolgirlAttack = loadImage("School girl/Attack.png");
   schoolgirlRun = loadImage("School girl/Walk.png");
   schoolgirlPose = loadImage("School girl/Dialogue.png");
+  shockwave = loadImage("School girl/shockwave.png");
 }
 
 

@@ -18,7 +18,7 @@ function gameStart(){
 
   isPlayerAttacked();
 
-  console.log(you.health);
+  healthBar();
 }
 
 function generateSurrounding() {
@@ -28,14 +28,14 @@ function generateSurrounding() {
   let whereInGridx = you.x - gridX * GRIDSIZE;
   let whereInGridy = you.y - gridY * GRIDSIZE;
 
-  let gridOnScreenH = floor(windowHeight / GRIDSIZE);
-  let gridOnScreenW = floor(windowWidth / GRIDSIZE);
+  let gridOnScreenH = Math.ceil(windowHeight / GRIDSIZE);
+  let gridOnScreenW = Math.ceil(windowWidth / GRIDSIZE);
 
   let smallestX = gridX - Math.floor(gridOnScreenW/2);
-  let smallestY = gridY - Math.floor(gridOnScreenH/2) ;
+  let smallestY = gridY - Math.floor(gridOnScreenH/2);
 
-  let biggestX = gridX + Math.floor(gridOnScreenW/2) +2;
-  let biggestY = gridY + Math.floor(gridOnScreenH/2) +2;
+  let biggestX = gridX + Math.floor(gridOnScreenW/2);
+  let biggestY = gridY + Math.floor(gridOnScreenH/2);
 
   for (let y = smallestY; y < biggestY; y ++){
     for (let x = smallestX; x < biggestX; x ++){
@@ -93,7 +93,8 @@ class SchoolGirl extends Player{
     this.currentAction = schoolgirlIdle;
     this.speed = 2;
     this.hitboxRange = 50;
-    this.cooldown = 2000
+    this.cooldown = 2000;
+    this.maxhealth = 100;
   }  
 
 }
@@ -110,7 +111,7 @@ function loadingCharacter(numofframe){
     x = -x;
   }
   imageMode(CENTER);
-  displaySheetStarting(you.currentAction, schoolgirlPixel.w, numofframe, x, windowHeight/2, buttonScale * 1.2, you.frameOn);
+  displaySheetStarting(you.currentAction, schoolgirlPixel.w, numofframe, x, windowHeight/2, buttonScale, you.frameOn);
   pop();
 }
 
@@ -163,7 +164,7 @@ function schoolgirlAllAnimation(){
 }
 
 function normalAttack(){
-  let whereHitBox = -1
+  let whereHitBox = -1;
   if (flip){
     whereHitBox = structuredClone(-you.hitboxRange +1);;
   }
@@ -207,7 +208,8 @@ function drawMonster(smallestX, smallestY, biggestX, biggestY){
       if (zomb.x > you.x){
         scale(-1,1);
       }
-      image(zombies, 0 , 0, GRIDSIZE *2,GRIDSIZE *2);
+      console.log(buttonScale);
+      image(zombies, 0 , 0, windowHeight/10,windowHeight/10);
 
       pop();
     }
@@ -221,8 +223,8 @@ function movingMonster() {
     let totalDistance = dist(you.x, you.y, zomb.x, zomb.y);
 
     if (totalDistance > 0) {
-      zomb.x += (distancex / totalDistance) * zomb.speed;
-      zomb.y += (distancey / totalDistance) * zomb.speed;
+      zomb.x += distancex / totalDistance * zomb.speed;
+      zomb.y += distancey / totalDistance * zomb.speed;
     }
   }
 }
@@ -253,17 +255,17 @@ function checkingWhatFrameAndSwitchBack(){
 
 function spawningCrate(){
   if (crateMillis + crateSpawnSpeed < millis()){
-    let randomStuff = round(random(1,3));
+    let randomStuff = round(random(1,2));
     let randomPlace = [round(random(MAPSIZE -1)), round(random(MAPSIZE -1))];
 
     if (randomStuff === 1){
-      map[randomPlace[0]][randomPlace[1]] = 1
+      map[randomPlace[0]][randomPlace[1]] = 1;
     }
     else if (randomStuff === 2){
-      map[randomPlace[0]][randomPlace[1]] = 2
+      map[randomPlace[0]][randomPlace[1]] = 2;
     }
     else if (randomStuff === 3){
-      map[randomPlace[0]][randomPlace[1]] = 3
+      map[randomPlace[0]][randomPlace[1]] = 3;
     }
     crateMillis = millis();
   }
@@ -279,7 +281,7 @@ function checkingCrateTouchy(gridX, gridY){
 
 function drawingAnimation(){
   if (explosionStart !== false && frameCount - explosionStart < 10){
-    push()
+    push();
     imageMode(CENTER);
     translate(windowWidth/2, windowHeight /2);
     image(explosion, 0 ,0, 1000, 1000);
@@ -289,4 +291,11 @@ function drawingAnimation(){
   else{
     explosionStart = false;
   }
+}
+
+function healthBar(){
+  fill("white");
+  rect(0,0, windowWidth / 200 * you.maxhealth, windowHeight /80);
+  fill("red");
+  rect(windowWidth / 800, windowHeight / 320, windowWidth / 202 * you.health + windowWidth / 800, windowHeight /80 - windowHeight / 160 );
 }
