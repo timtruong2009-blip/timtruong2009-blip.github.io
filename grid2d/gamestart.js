@@ -93,9 +93,12 @@ class SchoolGirl extends Player{
     this.currentAction = schoolgirlIdle;
     this.speed = 2;
     this.hitboxRange = 50;
+    this.movesRange = 500;
     this.cooldown = 2000;
     this.maxhealth = 100;
+
   }  
+
 
 }
 
@@ -160,6 +163,12 @@ function schoolgirlAllAnimation(){
   }
   else if (you.currentAction === schoolgirlPose){
     loadingCharacter(5);
+
+    push();
+    translate(windowWidth/2, windowHeight /2);
+    imageMode(CENTER);
+    image(shockwave,0, 0 , windowHeight, windowHeight);
+    pop();
   }
 }
 
@@ -174,7 +183,15 @@ function normalAttack(){
       allMonster.splice(i, 1);
     }
   }
+}
 
+function specialAttack(){
+  for (let i = allMonster.length -1; i >= 0; i--){
+    let zomb = allMonster[i];
+    if (zomb.x  > you.x - you.movesRange && zomb.x < you.x + you.movesRange && zomb.y  > you.y - you.movesRange && zomb.y < you.y + you.movesRange  ){
+      allMonster.splice(i, 1);
+    }
+  }
 }
 
 function isPlayerAttacked(){
@@ -185,6 +202,14 @@ function isPlayerAttacked(){
         lastDamageTick = millis();
       }
     }
+  }
+}
+
+function keyPressed(){
+  if (key === "e" && !you.attacking){
+    you.currentAction = schoolgirlPose;
+    you.usingMove = true;
+    you.frameOn = frameCount;
   }
 }
 // -------------------------------------------------The Monster--------------------------------------------------
@@ -230,14 +255,6 @@ function movingMonster() {
 }
 
 // -------------------------------------------------Others--------------------------------------------------
-function keyPressed(){
-  if (key === "e" && !you.attacking){
-    you.currentAction = schoolgirlPose;
-    you.usingMove = true;
-    you.frameOn = frameCount;
-  }
-}
-
 function checkingWhatFrameAndSwitchBack(){
   if (you.attacking){
     if (frameCount - you.frameOn >= 60) { 
@@ -288,7 +305,7 @@ function drawingAnimation(){
 
     pop();
   }
-  else{
+  else if (explosionStart !== false && ! frameCount - explosionStart < 10){
     explosionStart = false;
   }
 }
@@ -299,3 +316,4 @@ function healthBar(){
   fill("red");
   rect(windowWidth / 800, windowHeight / 320, windowWidth / 202 * you.health + windowWidth / 800, windowHeight /80 - windowHeight / 160 );
 }
+
