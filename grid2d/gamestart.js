@@ -8,6 +8,8 @@ function gameStart(){
 
   spawningCrate();
 
+  healthBar();
+
   movingMonster();
 
   schoolgirlAllAnimation();
@@ -18,7 +20,7 @@ function gameStart(){
 
   isPlayerAttacked();
 
-  healthBar();
+  
 }
 
 function generateSurrounding() {
@@ -93,13 +95,10 @@ class SchoolGirl extends Player{
     this.currentAction = schoolgirlIdle;
     this.speed = 2;
     this.hitboxRange = 50;
-    this.movesRange = 500;
+    this.movesRange = 400;
     this.cooldown = 2000;
     this.maxhealth = 100;
-
   }  
-
-
 }
 
 function makePlayer(){
@@ -190,6 +189,7 @@ function specialAttack(){
     let zomb = allMonster[i];
     if (zomb.x  > you.x - you.movesRange && zomb.x < you.x + you.movesRange && zomb.y  > you.y - you.movesRange && zomb.y < you.y + you.movesRange  ){
       allMonster.splice(i, 1);
+      console.log(100);
     }
   }
 }
@@ -207,11 +207,13 @@ function isPlayerAttacked(){
 
 function keyPressed(){
   if (key === "e" && !you.attacking){
+    specialAttack();
     you.currentAction = schoolgirlPose;
     you.usingMove = true;
     you.frameOn = frameCount;
   }
 }
+
 // -------------------------------------------------The Monster--------------------------------------------------
 function spawnMonster(){
   if (millistime + monsterTimeSpawn < millis()){
@@ -289,10 +291,12 @@ function spawningCrate(){
 }
 
 function checkingCrateTouchy(gridX, gridY){
-  if (map[gridY][gridX] === 1){
+  if (map[gridY][gridX] === 1 || map[gridY -1][gridX] === 1){
     console.log("herej");
     explosionStart = frameCount;
+    you.health -= 20;
     map[gridY][gridX] = 0;
+    map[gridY -1][gridX] = 0;
   }
 }
 
@@ -312,8 +316,17 @@ function drawingAnimation(){
 
 function healthBar(){
   fill("white");
-  rect(0,0, windowWidth / 200 * you.maxhealth, windowHeight /80);
+  rect(0,0, windowWidth / 200 * you.maxhealth, windowHeight /40);
   fill("red");
-  rect(windowWidth / 800, windowHeight / 320, windowWidth / 202 * you.health + windowWidth / 800, windowHeight /80 - windowHeight / 160 );
+  rect(windowWidth / 800, windowHeight / 320, windowWidth / 202 * you.health + windowWidth / 800, windowHeight /45 - windowHeight / 160 );
+
+  if (you.health <= 0){
+    you.speed = 0;
+    you.currentAction = schoolgirlIdle;
+    textSize(100);
+    textAlign(CENTER);
+    text("YOU DIE", windowWidth/2,windowHeight /2);
+    
+  }
 }
 

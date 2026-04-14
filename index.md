@@ -10,6 +10,7 @@
 - [cool battleground game](2dgrid)
 - [game of life](gameoflife)
 - [character](character)
+- [OOP demo](walker)
 
 ## Assignments
 - [interactive scene](interactive_assi)

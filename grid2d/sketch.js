@@ -72,6 +72,7 @@ let explosionStart = false;
 let lastDamageTick = 0;
 let DPSAllow = 200;
 
+let dietime = 0;
 
 // monster and player
 let you;
@@ -114,6 +115,7 @@ function draw() {
   windowResized();
   background(MAPCOLOR);
   buttonScale = calculateScale(832);
+
   if (gameState === "mainscreen"){
     makeMainScreen();
   }

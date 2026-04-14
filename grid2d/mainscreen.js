@@ -26,6 +26,3 @@ function enlargeButton(buttonScale){
     buttonMultiply = 1;
   }
 }
-
-
-
