@@ -11,6 +11,7 @@
 - [game of life](gameoflife)
 - [character](character)
 - [OOP demo](walker)
+- [firework](firework)
 
 ## Assignments
 - [interactive scene](interactive_assi)

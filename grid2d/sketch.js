@@ -83,6 +83,8 @@ const MONSTERSPAWNRANGE = 100;
 let monsterSpeed = 1;
 
 
+let lastSpecialMoves = 0;
+
 
 
 function preload(){

@@ -20,6 +20,8 @@ function gameStart(){
 
   isPlayerAttacked();
 
+  gui();
+
   
 }
 
@@ -94,9 +96,12 @@ class SchoolGirl extends Player{
     super(classes,x, y);
     this.currentAction = schoolgirlIdle;
     this.speed = 2;
+
     this.hitboxRange = 50;
-    this.movesRange = 300;
+    this.movesRange = 350;
+    
     this.cooldown = 2000;
+    this.movesCooldown = 10000;
     this.maxhealth = 100;
   }  
 }
@@ -189,7 +194,6 @@ function specialAttack(){
     let zomb = allMonster[i];
     if (zomb.x  > you.x - you.movesRange && zomb.x < you.x + you.movesRange && zomb.y  > you.y - you.movesRange/1.5 && zomb.y < you.y + you.movesRange  ){
       allMonster.splice(i, 1);
-      console.log(100);
     }
   }
 }
@@ -206,7 +210,8 @@ function isPlayerAttacked(){
 }
 
 function keyPressed(){
-  if (key === "e" && !you.attacking){
+  if (key === "e" && !you.attacking && lastSpecialMoves + you.movesCooldown < millis()){
+    lastSpecialMoves = millis();
     specialAttack();
     you.currentAction = schoolgirlPose;
     you.usingMove = true;
@@ -217,7 +222,7 @@ function keyPressed(){
 // -------------------------------------------------The Monster--------------------------------------------------
 function spawnMonster(){
   if (millistime + monsterTimeSpawn < millis()){
-    let newMob = {x:floor(random(you.x - MONSTERSPAWNRANGE * GRIDSIZE, you.x + MONSTERSPAWNRANGE * GRIDSIZE)), y:floor(random(you.y - MONSTERSPAWNRANGE * GRIDSIZE, you.y + MONSTERSPAWNRANGE * GRIDSIZE)), speed: random(1,3)};
+    let newMob = {x:floor(random(you.x - MONSTERSPAWNRANGE * GRIDSIZE, you.x + MONSTERSPAWNRANGE * GRIDSIZE)), y:floor(random(you.y - MONSTERSPAWNRANGE * GRIDSIZE, you.y + MONSTERSPAWNRANGE * GRIDSIZE)), speed: random(monsterSpeed, monsterSpeed +2)};
     allMonster.push(newMob);
     millistime = millis();
   }
@@ -235,7 +240,6 @@ function drawMonster(smallestX, smallestY, biggestX, biggestY){
       if (zomb.x > you.x){
         scale(-1,1);
       }
-      console.log(buttonScale);
       image(zombies, 0 , 0, windowHeight/10,windowHeight/10);
 
       pop();
@@ -254,6 +258,7 @@ function movingMonster() {
       zomb.y += distancey / totalDistance * zomb.speed;
     }
   }
+  monsterSpeed += 0.001;
 }
 
 // -------------------------------------------------Others--------------------------------------------------
@@ -274,17 +279,14 @@ function checkingWhatFrameAndSwitchBack(){
 
 function spawningCrate(){
   if (crateMillis + crateSpawnSpeed < millis()){
-    let randomStuff = round(random(1,2));
+    let randomStuff = round(random(0,10));
     let randomPlace = [round(random(MAPSIZE -1)), round(random(MAPSIZE -1))];
 
-    if (randomStuff === 1){
+    if (randomStuff >= 2){
       map[randomPlace[0]][randomPlace[1]] = 1;
     }
-    else if (randomStuff === 2){
+    else if (randomStuff < 2){
       map[randomPlace[0]][randomPlace[1]] = 2;
-    }
-    else if (randomStuff === 3){
-      map[randomPlace[0]][randomPlace[1]] = 3;
     }
     crateMillis = millis();
   }
@@ -292,9 +294,19 @@ function spawningCrate(){
 
 function checkingCrateTouchy(gridX, gridY){
   if (map[gridY][gridX] === 1 || map[gridY -1][gridX] === 1){
-    console.log("herej");
     explosionStart = frameCount;
     you.health -= 20;
+    map[gridY][gridX] = 0;
+    map[gridY -1][gridX] = 0;
+  }
+  if (map[gridY][gridX] === 2 || map[gridY -1][gridX] === 2){
+    if (you.health + 10 <= you.maxhealth){
+      you.health += 10;
+    }
+    else{
+      you.health = structuredClone(you.maxhealth);
+    }
+    
     map[gridY][gridX] = 0;
     map[gridY -1][gridX] = 0;
   }
@@ -315,6 +327,7 @@ function drawingAnimation(){
 }
 
 function healthBar(){
+  push();
   fill("white");
   rect(0,0, windowWidth / 200 * you.maxhealth, windowHeight /40);
   fill("red");
@@ -326,8 +339,32 @@ function healthBar(){
     textSize(100);
     textAlign(CENTER);
     text("YOU DIE", windowWidth/2,windowHeight /2);
-    
   }
+  pop();
 }
 
+function gui(){
+  let circleSize = windowHeight / 10;
+
+  push();
+
+  fill("black");
+  circle(circleSize, windowHeight - circleSize, circleSize);
+  fill("white");
+  circle(circleSize, windowHeight - circleSize, circleSize * 0.9);
+
+  textAlign(CENTER);
+  textSize(circleSize /3);
+  fill("black");
+  if (lastSpecialMoves + you.movesCooldown < millis()){
+    text("ready",circleSize, windowHeight - circleSize/1.15 );
+
+  }
+  else{
+    text(Math.ceil((lastSpecialMoves + you.movesCooldown - millis()) / 1000),circleSize, windowHeight - circleSize/1.15 );
+  }
+
+
+  pop();
+}
 
