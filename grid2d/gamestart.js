@@ -30,14 +30,14 @@ function generateSurrounding() {
   let whereInGridx = you.x - gridX * GRIDSIZE;
   let whereInGridy = you.y - gridY * GRIDSIZE;
 
-  let gridOnScreenH = Math.ceil(windowHeight / GRIDSIZE);
-  let gridOnScreenW = Math.ceil(windowWidth / GRIDSIZE);
+  let gridOnScreenH = Math.ceil(windowHeight / GRIDSIZE) ;
+  let gridOnScreenW = Math.ceil(windowWidth / GRIDSIZE) ;
 
   let smallestX = gridX - Math.floor(gridOnScreenW/2);
   let smallestY = gridY - Math.floor(gridOnScreenH/2);
 
-  let biggestX = gridX + Math.floor(gridOnScreenW/2);
-  let biggestY = gridY + Math.floor(gridOnScreenH/2);
+  let biggestX = gridX + Math.floor(gridOnScreenW/2) +1;
+  let biggestY = gridY + Math.floor(gridOnScreenH/2) +1;
 
   for (let y = smallestY; y < biggestY; y ++){
     for (let x = smallestX; x < biggestX; x ++){
@@ -95,7 +95,7 @@ class SchoolGirl extends Player{
     this.currentAction = schoolgirlIdle;
     this.speed = 2;
     this.hitboxRange = 50;
-    this.movesRange = 400;
+    this.movesRange = 300;
     this.cooldown = 2000;
     this.maxhealth = 100;
   }  
@@ -187,7 +187,7 @@ function normalAttack(){
 function specialAttack(){
   for (let i = allMonster.length -1; i >= 0; i--){
     let zomb = allMonster[i];
-    if (zomb.x  > you.x - you.movesRange && zomb.x < you.x + you.movesRange && zomb.y  > you.y - you.movesRange && zomb.y < you.y + you.movesRange  ){
+    if (zomb.x  > you.x - you.movesRange && zomb.x < you.x + you.movesRange && zomb.y  > you.y - you.movesRange/1.5 && zomb.y < you.y + you.movesRange  ){
       allMonster.splice(i, 1);
       console.log(100);
     }
@@ -329,4 +329,5 @@ function healthBar(){
     
   }
 }
+
 
