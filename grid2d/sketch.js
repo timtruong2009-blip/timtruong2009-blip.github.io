@@ -4,6 +4,7 @@
 //
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
+// - I make it so that only the grid surrounding the player is display to avoid lag, the real map is very big
 
 // Credit: 
 // - School girl character: Free Game Assets on Itch.io
@@ -38,7 +39,7 @@ let bomb;
 
 
 
-
+// mappy
 let map = [];
 let currentlySelected = 0;
 
@@ -47,6 +48,7 @@ const MAPSIZE = 400;
 const GRIDSIZE = 32;
 const MAPCOLOR = "#9e7c77";
 
+// crate variable
 const crateSpawnSpeed = 10;
 let crateMillis = 0;
 
@@ -86,7 +88,7 @@ let monsterSpeed = 1;
 let lastSpecialMoves = 0;
 
 
-
+// preloading all images
 function preload(){
   survivalStartScreen = loadImage("otherImage/survivorio.jpg");
   survivalButton = loadImage("otherImage/survivoributton.jpg");
@@ -103,17 +105,15 @@ function preload(){
   shockwave = loadImage("School girl/shockwave.png");
 }
 
-
+// setting up the thinggy
 function setup() {
   noStroke();
   buttonScale = calculateScale(832);
   createCanvas(windowWidth, windowHeight);
   noSmooth();
-  
-  
 }
 
-
+// drawing the game thingy
 function draw() {
   windowResized();
   background(MAPCOLOR);
@@ -126,12 +126,11 @@ function draw() {
     preparing();
   }
   else if (gameState === "gamestart"){
-    
     gameStart();
   }
 }
 
-
+// creating a new blank world
 function makeWorld(){
   let world = [];
   for (let y = 0; y <= MAPSIZE; y ++){
@@ -144,7 +143,7 @@ function makeWorld(){
   return world;               
 }
 
-
+// displaying the character and their animation
 function displaySheetStarting(classes,classespixel, numofframe, wherex, wherey, multiplier, startFrame){
   let whatFrameNow = frameCount - startFrame;
   let whichframe = floor(whatFrameNow / 10) % numofframe;
@@ -160,34 +159,34 @@ function displaySheetStarting(classes,classespixel, numofframe, wherex, wherey, 
     classespixel, classespixel);
 }
 
-
+// resizig the window
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
 
-
+// when mouse press activate
 function mousePressed(){
   if (gameState === "mainscreen"){
+    // main screen start butto
     if (mouseX >= 150 * buttonScale + screenDistanceFromX && mouseX <= 320  * buttonScale + screenDistanceFromX && mouseY >= 610 * buttonScale && mouseY <= 683 * buttonScale){
       gameState = "preparephase";
     }
   }
   else if (gameState === "preparephase"){
+    // prepare phase start button
     if (mouseX >= 150 * buttonScale + screenDistanceFromX && mouseX <= 320  * buttonScale + screenDistanceFromX && mouseY >= 610 * buttonScale && mouseY <= 683 * buttonScale){
       map = makeWorld();
       makePlayer();
       gameState = "gamestart";
-      
     }
   }
   else if (gameState === "gamestart"){
-    
+    // if press on screen then normal attack
     if (!you.usingMove){
       you.currentAction = schoolgirlAttack;
       you.attacking = true;
       you.frameOn = frameCount;
     }
-      
   }
 }
 

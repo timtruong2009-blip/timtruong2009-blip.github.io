@@ -25,6 +25,7 @@ function gameStart(){
   
 }
 
+// generate only the square grid displaying on your screen
 function generateSurrounding() {
   let gridX = floor(you.x / GRIDSIZE);
   let gridY = floor(you.y / GRIDSIZE);
@@ -77,6 +78,7 @@ function generateSurrounding() {
 }
 
 // -------------------------------------------------The player--------------------------------------------------
+// default template for all player
 class Player{
   constructor(classes, x, y){
     this.who = classes;
@@ -92,6 +94,7 @@ class Player{
   }
 }
 
+// school girl class
 class SchoolGirl extends Player{
   constructor(classes, x, y ){
     super(classes,x, y);
@@ -107,10 +110,12 @@ class SchoolGirl extends Player{
   }  
 }
 
+// making a new school girl
 function makePlayer(){
   you = new SchoolGirl("schoolgirl", round(map.length/2), round(map.length/2));
 }
 
+// displaying the character in the middle of the screen
 function loadingCharacter(numofframe){
   let x = windowWidth/2;
   push();
@@ -123,6 +128,7 @@ function loadingCharacter(numofframe){
   pop();
 }
 
+// moving character if pressed
 function characterMoving(){
   let prevxy = structuredClone({x: you.x, y: you.y});
   if (!you.usingMove){
@@ -151,11 +157,9 @@ function characterMoving(){
       you.currentAction = schoolgirlIdle;
     }
   }
-  else{
-  }
-  
 }
 
+// deciding which animation is school girl on rightnow
 function schoolgirlAllAnimation(){
   if (you.currentAction === schoolgirlIdle){
     loadingCharacter(6);
@@ -177,6 +181,7 @@ function schoolgirlAllAnimation(){
   }
 }
 
+// normal attack and hitbox
 function normalAttack(){
   let whereHitBox = -1;
   if (flip){
@@ -190,6 +195,7 @@ function normalAttack(){
   }
 }
 
+// special attack and its hit box
 function specialAttack(){
   for (let i = allMonster.length -1; i >= 0; i--){
     let zomb = allMonster[i];
@@ -199,6 +205,7 @@ function specialAttack(){
   }
 }
 
+// if zombie near player x and y then get bite
 function isPlayerAttacked(){
   for (let zomb of allMonster){
     if (zomb.x > you.x - playerHitBox && zomb.x < you.x + playerHitBox && zomb.y > you.y - playerHitBox*3 && zomb.y < you.y + playerHitBox ){
@@ -210,6 +217,7 @@ function isPlayerAttacked(){
   }
 }
 
+// key pressed for special moves
 function keyPressed(){
   if (key === "e" && !you.attacking && lastSpecialMoves + you.movesCooldown < millis()){
     lastSpecialMoves = millis();
@@ -227,6 +235,7 @@ function keyPressed(){
 }
 
 // -------------------------------------------------The Monster--------------------------------------------------
+// spawning monster every monsterTimeSqpawn
 function spawnMonster(){
   if (millistime + monsterTimeSpawn < millis()){
     let newMob = {x:floor(random(you.x - MONSTERSPAWNRANGE * GRIDSIZE, you.x + MONSTERSPAWNRANGE * GRIDSIZE)), y:floor(random(you.y - MONSTERSPAWNRANGE * GRIDSIZE, you.y + MONSTERSPAWNRANGE * GRIDSIZE)), speed: random(monsterSpeed, monsterSpeed +2)};
@@ -235,6 +244,7 @@ function spawnMonster(){
   }
 }
 
+// drawing monster in relative to the player position
 function drawMonster(smallestX, smallestY, biggestX, biggestY){
   allMonsterOnScreen = [];
   for (let zomb of allMonster){
@@ -254,6 +264,7 @@ function drawMonster(smallestX, smallestY, biggestX, biggestY){
   }
 }
 
+// movining the momnster close to the player using math a2 + b2 = c2
 function movingMonster() {
   for (let zomb of allMonster) {
     let distancex = you.x - zomb.x;
@@ -269,6 +280,7 @@ function movingMonster() {
 }
 
 // -------------------------------------------------Others--------------------------------------------------
+// after 1 cycle then the attack animation stop
 function checkingWhatFrameAndSwitchBack(){
   if (you.attacking){
     if (frameCount - you.frameOn >= 60) { 
@@ -284,6 +296,7 @@ function checkingWhatFrameAndSwitchBack(){
   }
 }
 
+// spawning crate every crateSpawnSpeed
 function spawningCrate(){
   if (crateMillis + crateSpawnSpeed < millis()){
     let randomStuff = round(random(0,10));
@@ -299,13 +312,16 @@ function spawningCrate(){
   }
 }
 
+// if crate is at player grid or above it one block then activate
 function checkingCrateTouchy(gridX, gridY){
+  // explosion crate - 20 hp
   if (map[gridY][gridX] === 1 || map[gridY -1][gridX] === 1){
     explosionStart = frameCount;
     you.health -= 20;
     map[gridY][gridX] = 0;
     map[gridY -1][gridX] = 0;
   }
+  // healing crate + 10 hp
   if (map[gridY][gridX] === 2 || map[gridY -1][gridX] === 2){
     if (you.health + 10 <= you.maxhealth){
       you.health += 10;
@@ -319,6 +335,7 @@ function checkingCrateTouchy(gridX, gridY){
   }
 }
 
+// drawing explosion animation everytime the crate explode
 function drawingAnimation(){
   if (explosionStart !== false && frameCount - explosionStart < 10){
     push();
@@ -333,14 +350,17 @@ function drawingAnimation(){
   }
 }
 
+// displaying health bar and stop player when health bar is 0 or less
 function healthBar(){
   push();
   fill("white");
   rect(0,0, windowWidth / 200 * you.maxhealth, windowHeight /40);
-  fill("red");
-  rect(windowWidth / 800, windowHeight / 320, windowWidth / 202 * you.health + windowWidth / 800, windowHeight /45 - windowHeight / 160 );
-
-  if (you.health <= 0){
+  if (you.health > 0){
+    fill("red");
+    rect(windowWidth / 800, windowHeight / 320, windowWidth / 202 * you.health + windowWidth / 800, windowHeight /45 - windowHeight / 160 );
+  }
+  
+  else{
     you.speed = 0;
     you.currentAction = schoolgirlIdle;
     textSize(100);
