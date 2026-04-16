@@ -39,7 +39,7 @@ function generateSurrounding() {
   let smallestY = gridY - Math.floor(gridOnScreenH/2);
 
   let biggestX = gridX + Math.floor(gridOnScreenW/2) +1;
-  let biggestY = gridY + Math.floor(gridOnScreenH/2) +1;
+  let biggestY = gridY + Math.floor(gridOnScreenH/2) +2;
 
   for (let y = smallestY; y < biggestY; y ++){
     for (let x = smallestX; x < biggestX; x ++){
@@ -87,6 +87,7 @@ class Player{
     this.attacking = false;
 
     this.frameOn = 0;
+    this.alive = true;
     
   }
 }
@@ -217,6 +218,12 @@ function keyPressed(){
     you.usingMove = true;
     you.frameOn = frameCount;
   }
+  if (key === "r" && ! you.alive){
+    allMonster = [];
+    map = [];
+    monsterSpeed = 1;
+    gameState = "mainscreen"
+  }
 }
 
 // -------------------------------------------------The Monster--------------------------------------------------
@@ -338,7 +345,8 @@ function healthBar(){
     you.currentAction = schoolgirlIdle;
     textSize(100);
     textAlign(CENTER);
-    text("YOU DIE", windowWidth/2,windowHeight /2);
+    you.alive = false;
+    text("YOU DIE, R to restart", windowWidth/2,windowHeight /2);
   }
   pop();
 }

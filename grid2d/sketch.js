@@ -109,7 +109,8 @@ function setup() {
   buttonScale = calculateScale(832);
   createCanvas(windowWidth, windowHeight);
   noSmooth();
-  map = makeWorld();
+  
+  
 }
 
 
@@ -125,6 +126,7 @@ function draw() {
     preparing();
   }
   else if (gameState === "gamestart"){
+    
     gameStart();
   }
 }
@@ -172,11 +174,14 @@ function mousePressed(){
   }
   else if (gameState === "preparephase"){
     if (mouseX >= 150 * buttonScale + screenDistanceFromX && mouseX <= 320  * buttonScale + screenDistanceFromX && mouseY >= 610 * buttonScale && mouseY <= 683 * buttonScale){
+      map = makeWorld();
       makePlayer();
       gameState = "gamestart";
+      
     }
   }
   else if (gameState === "gamestart"){
+    
     if (!you.usingMove){
       you.currentAction = schoolgirlAttack;
       you.attacking = true;
