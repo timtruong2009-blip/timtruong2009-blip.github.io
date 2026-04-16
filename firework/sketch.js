@@ -25,9 +25,13 @@ class Spark{
     this.y += this.dy;
     this.opacity -= 1;
   }
+  kill(){
+    return this.opacity <= 0;
+  }
 }
 let fireWorks = [];
 const NUMOFSPARK = 100;
+let pressed = false;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -36,8 +40,14 @@ function setup() {
 function draw() {
   background("black");
   for (let fire of fireWorks){
-    fire.display();
-    fire.update();
+    if (fire.kill()){
+      let index = fireWorks.indexOf(fire);
+      fireWorks.splice(index,1);
+    }
+    else{
+      fire.display();
+      fire.update();
+    }
   }
 }
 function mousePressed (){
