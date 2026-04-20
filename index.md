@@ -13,6 +13,7 @@
 - [OOP demo](walker)
 - [firework](firework)
 - [Ball Collision](ball_coli)
+- [connected nodes](connected_nodes)
 
 ## Assignments
 - [interactive scene](interactive_assi)
