@@ -14,6 +14,7 @@
 - [firework](firework)
 - [Ball Collision](ball_coli)
 - [connected nodes](connected_nodes)
+- [inheritance](inheritance)
 
 ## Assignments
 - [interactive scene](interactive_assi)
