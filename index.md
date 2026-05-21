@@ -16,6 +16,7 @@
 - [connected nodes](connected_nodes)
 - [inheritance](inheritance)
 - [2dcollide](2dcollide)
+- [recursive_circle](recursive_circle)
 
 ## Assignments
 - [interactive scene](interactive_assi)
