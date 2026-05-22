@@ -17,6 +17,7 @@
 - [inheritance](inheritance)
 - [2dcollide](2dcollide)
 - [recursive_circle](recursive_circle)
+- [triangle](triangle)
 
 ## Assignments
 - [interactive scene](interactive_assi)
